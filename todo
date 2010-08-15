@@ -1,0 +1,6 @@
+- correct handling of sender-visibility flag when receiving message (and also use correct address for billing. no spoofing).
+- In content adaptation: Colour depth adjustment
+- Need to parameterise some values: response messages (say on failed content adaptation)
+- Test suite
+- Correct handling of unrecognised mms headers. spec says pass them un-changed.
+- Generalise billing interface

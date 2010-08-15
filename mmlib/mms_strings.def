@@ -1,0 +1,349 @@
+/*
+ * Mbuni - Open  Source MMS Gateway 
+ * 
+ * MMS field & value definitions - pre-processor magic.
+ * 
+ * Copyright (C) 2003 - 2005, Digital Solutions Ltd. - http://www.dsmagic.com
+ *
+ * Paul Bagyenda <bagyenda@dsmagic.com>
+ * 
+ * This program is free software, distributed under the terms of
+ * the GNU General Public License, with a few exceptions granted (see LICENSE)
+ */
+
+ 
+/* String table with entries starting at 0 and numbered upwards. */
+#if !defined(LINEAR)
+#error "Required macro LINEAR is missing."
+#endif
+
+/* Entry in a LINEAR table.  Default is to do nothing for it. */
+#if !defined(STRING)
+#define STRING
+#endif
+
+/* String table where entries have assigned numbers.  Multiple
+ * entries can have the same number (the first listed entry is used
+ * when looking up by number). */
+#if !defined(NUMBERED)
+#define NUMBERED LINEAR
+#endif
+
+/* Entry in a NUMBERED table */
+#if !defined(ASSIGN)
+#define ASSIGN(string, number) STRING(string)
+#endif
+
+/* Entry in a versioned NUMBERED table */
+#if !defined(VASSIGN)
+#define VASSIGN(version, string, number) VSTRING(version, string)
+#endif
+
+/* Just like LINEAR, but an enumerated type name##_enum is defined for
+ * the entries. */
+#if !defined(NAMED)
+#define NAMED LINEAR
+#endif
+
+/* Entry in a NAMED table */
+#if !defined(NSTRING)
+#define NSTRING(string, name) STRING(string)
+#endif
+
+/* Entry in a versioned NAMED table */
+#if !defined(VNSTRING)
+#define VNSTRING(version,string, name) VSTRING(version,string)
+#endif
+
+NAMED(header, 
+VNSTRING(MS_1_1, "Unknown",MMS_HEADER_NONE)
+VNSTRING(MS_1_1, "Bcc",MMS_HEADER_BCC)
+VNSTRING(MS_1_1, "Cc",MMS_HEADER_CC)
+VNSTRING(MS_1_1, "X-Mms-Content-Location",MMS_HEADER_CONTENT_LOCATION)
+VNSTRING(MS_1_1, "Content-Type",MMS_HEADER_CONTENT_TYPE)
+VNSTRING(MS_1_1, "Date",MMS_HEADER_DATE)
+VNSTRING(MS_1_1, "X-Mms-Delivery-Report",MMS_HEADER_DELIVERY_REPORT)
+VNSTRING(MS_1_1, "X-Mms-Delivery-Time",MMS_HEADER_DELIVERY_TIME)
+VNSTRING(MS_1_1, "X-Mms-Expiry",MMS_HEADER_EXPIRY)
+VNSTRING(MS_1_1, "From",MMS_HEADER_FROM)
+VNSTRING(MS_1_1, "X-Mms-Message-Class",MMS_HEADER_MESSAGE_CLASS)
+VNSTRING(MS_1_1, "Message-ID",MMS_HEADER_MESSAGE_ID)
+VNSTRING(MS_1_1, "X-Mms-Message-Type",MMS_HEADER_MESSAGE_TYPE)
+VNSTRING(MS_1_1, "X-Mms-MMS-Version",MMS_HEADER_MMS_VERSION)
+VNSTRING(MS_1_1, "X-Mms-Message-Size",MMS_HEADER_MESSAGE_SIZE)
+VNSTRING(MS_1_1, "X-Mms-Priority",MMS_HEADER_PRIORITY)
+VNSTRING(MS_1_1, "X-Mms-Read-Report",MMS_HEADER_READ_REPORT)
+VNSTRING(MS_1_1, "X-Mms-Report-Allowed",MMS_HEADER_REPORT_ALLOWED)
+VNSTRING(MS_1_1, "X-Mms-Response-Status",MMS_HEADER_RESPONSE_STATUS)
+VNSTRING(MS_1_1, "X-Mms-Response-Text",MMS_HEADER_RESPONSE_TEXT)
+VNSTRING(MS_1_1, "X-Mms-Sender-Visibility",MMS_HEADER_SENDER_VISIBILITY)
+VNSTRING(MS_1_1, "X-Mms-Status",MMS_HEADER_STATUS)
+VNSTRING(MS_1_1, "Subject",MMS_HEADER_SUBJECT)
+VNSTRING(MS_1_1, "To",MMS_HEADER_TO)
+VNSTRING(MS_1_1, "X-Mms-Transaction-Id",MMS_HEADER_TRANSACTION_ID)
+VNSTRING(MS_1_1, "X-Mms-Retrieve-Status",MMS_HEADER_RETRIEVE_STATUS)
+VNSTRING(MS_1_1, "X-Mms-Retrieve-Text",MMS_HEADER_RETRIEVE_TEXT)
+VNSTRING(MS_1_1, "X-Mms-Read-Status",MMS_HEADER_READ_STATUS)
+VNSTRING(MS_1_1, "X-Mms-Reply-Charging",MMS_HEADER_REPLY_CHARGING)
+VNSTRING(MS_1_1, "X-Mms-Reply-Charging-Deadline",MMS_HEADER_REPLY_CHARGING_DEADLINE)
+VNSTRING(MS_1_1, "X-Mms-Reply-Charging-ID",MMS_HEADER_REPLY_CHARGING_ID)
+VNSTRING(MS_1_1, "X-Mms-Reply-Charging-Size",MMS_HEADER_REPLY_CHARGING_SIZE)
+VNSTRING(MS_1_1, "X-Mms-Previously-Sent-By",MMS_HEADER_PREVIOUSLY_SENT_BY)
+VNSTRING(MS_1_1, "X-Mms-Previously-Sent-Date",MMS_HEADER_PREVIOUSLY_SENT_DATE)
+
+VNSTRING(MS_1_2,"X-Mms-Store", MMS_HEADER_STORE)
+VNSTRING(MS_1_2,"X-Mms-MM-State", MMS_HEADER_MM_STATE)
+VNSTRING(MS_1_2,"X-Mms-MM-Flags", MMS_HEADER_MM_FLAGS)
+VNSTRING(MS_1_2,"X-Mms-Store-Status", MMS_HEADER_STORE_STATUS)
+VNSTRING(MS_1_2,"X-Mms-Store-Status-Text", MMS_HEADER_STORE_STATUS_TEXT)
+VNSTRING(MS_1_2,"X-Mms-Stored", MMS_HEADER_STORED)
+VNSTRING(MS_1_2,"X-Mms-Attributes", MMS_HEADER_ATTRIBUTES)
+VNSTRING(MS_1_2,"X-Mms-Totals", MMS_HEADER_TOTALS)
+VNSTRING(MS_1_2,"X-Mms-Mbox-Totals", MMS_HEADER_MBOX_TOTALS)
+VNSTRING(MS_1_2,"X-Mms-Quotas", MMS_HEADER_QUOTAS)
+VNSTRING(MS_1_2,"X-Mms-Mbox-Quotas", MMS_HEADER_MBOX_QUOTAS)
+VNSTRING(MS_1_2,"X-Mms-Message-Count", MMS_HEADER_MESSAGE_COUNT)
+VNSTRING(MS_1_2,"Content", CONTENT)
+VNSTRING(MS_1_2,"X-Mms-Start", MMS_HEADER_START)
+VNSTRING(MS_1_2,"Additional-headers", ADDITIONAL_HEADERS)
+VNSTRING(MS_1_2,"X-Mms-Distribution-Indicator", MMS_HEADER_DISTRIBUTION_INDICATOR)
+VNSTRING(MS_1_2,"X-Mms-Element-Descriptor", MMS_HEADER_ELEMENT_DESCRIPTOR)
+VNSTRING(MS_1_2,"X-Mms-Limit", MMS_HEADER_LIMIT)
+)
+
+LINEAR(reports,
+STRING("Yes")
+STRING("No")
+)
+
+/* the ones below are wired to agree with flags above. */
+LINEAR(boolean_flag,
+STRING("true")
+STRING("false")
+)
+
+NAMED(message_type,
+VNSTRING(MS_1_1,"m-send-req", MMS_MSGTYPE_SEND_REQ)
+VNSTRING(MS_1_1,"m-send-conf", MMS_MSGTYPE_SEND_CONF)
+VNSTRING(MS_1_1,"m-notification-ind", MMS_MSGTYPE_NOTIFICATION_IND)
+VNSTRING(MS_1_1,"m-notifyresp-ind", MMS_MSGTYPE_NOTIFYRESP)
+VNSTRING(MS_1_1,"m-retrieve-conf", MMS_MSGTYPE_RETRIEVE_CONF)
+VNSTRING(MS_1_1,"m-acknowledge-ind", MMS_MSGTYPE_ACKNOWLEDGE_IND)
+VNSTRING(MS_1_1,"m-delivery-ind", MMS_MSGTYPE_DELIVERY_IND)
+VNSTRING(MS_1_1,"m-read-rec-ind", MMS_MSGTYPE_READ_REC_IND)
+VNSTRING(MS_1_1,"m-read-orig-ind", MMS_MSGTYPE_READ_ORIG_IND)
+VNSTRING(MS_1_1,"m-forward-req", MMS_MSGTYPE_FORWARD_REQ)
+VNSTRING(MS_1_1,"m-forward-conf", MMS_MSGTYPE_FORWARD_CONF)
+
+VNSTRING(MS_1_2,"m-mbox-store-req",MMS_MSGTYPE_MBOX_STORE_REQ)
+VNSTRING(MS_1_2,"m-mbox-store-conf",MMS_MSGTYPE_MBOX_STORE_CONF)
+VNSTRING(MS_1_2,"m-mbox-view-req",MMS_MSGTYPE_MBOX_VIEW_REQ)
+VNSTRING(MS_1_2,"m-mbox-view-conf",MMS_MSGTYPE_MBOX_VIEW_CONF)
+VNSTRING(MS_1_2,"m-mbox-upload-req",MMS_MSGTYPE_MBOX_UPLOAD_REQ)
+VNSTRING(MS_1_2,"m-mbox-upload-conf",MMS_MSGTYPE_MBOX_UPLOAD_CONF)
+VNSTRING(MS_1_2,"m-mbox-delete-req",MMS_MSGTYPE_MBOX_DELETE_REQ)
+VNSTRING(MS_1_2,"m-mbox-delete-conf",MMS_MSGTYPE_MBOX_DELETE_CONF)
+VNSTRING(MS_1_2,"m-mbox-descr",MMS_MSGTYPE_MBOX_DESCR)
+)
+
+LINEAR(message_class,
+STRING("Personal")
+STRING("Advertisement")
+STRING("Informational")
+STRING("Auto")
+)
+
+
+NUMBERED(response_status,
+ASSIGN("Ok",128)
+ASSIGN("Error-unspecified",129) 
+ASSIGN("Error-service-denied",130) 
+ASSIGN("Error-message-format-corrupt",131) 
+ASSIGN("Error-sending-address-unresolved",132) 
+ASSIGN("Error-message-not-found",133) 
+ASSIGN("Error-network-problem",134) 
+ASSIGN("Error-content-not-accepted",135) 
+ASSIGN("Error-unsupported-message",136)
+ASSIGN("Error-transient-failure",192)
+ASSIGN("Error-transient-sending-address-unresolved",193)
+ASSIGN("Error-transient-message-not-found",194)
+ASSIGN("Error-transient-network-problem",195)
+ASSIGN("Error-permanent-failure",224)
+ASSIGN("Error-permanent-service-denied",225)
+ASSIGN("Error-permanent-message-format-corrupt",226)
+ASSIGN("Error-permanent-sending-address-unresolved",227)
+ASSIGN("Error-permanent-message-not-found",228)
+ASSIGN("Error-permanent-content-not-accepted",229)
+ASSIGN("Error-permanent-reply-charging-limitations-not-met",230)
+ASSIGN("Error-permanent-reply-charging-request-not-accepted",231)
+ASSIGN("Error-permanent-reply-charging-forwarding-denied",232)
+ASSIGN("Error-permanent-reply-charging-not-supported",233)
+)
+
+NUMBERED(retrieve_status, 
+ASSIGN("Ok",128)
+ASSIGN("Error-transient-failure",192)
+ASSIGN("Error-transient-message-not-found",193)
+ASSIGN("Error-transient-network-problem",194)
+ASSIGN("Error-permanent-failure",224)
+ASSIGN("Error-permanent-service-denied",225)
+ASSIGN("Error-permanent-message-not-found",226)
+ASSIGN("Error-permanent-content-unsupported",227)
+)
+
+			 
+LINEAR(priority,
+STRING("Low")
+STRING("Normal")
+STRING("High")
+)
+
+LINEAR(read_status,
+STRING("Read")
+STRING("Deleted without being read")
+)
+
+LINEAR(visibility,
+STRING("Hide")
+STRING("Show")
+)
+
+LINEAR(reply_charging,
+STRING("Requested")
+STRING("Requested text only")
+STRING("Accepted")
+STRING("Accepted text only")
+)
+
+LINEAR(status,
+STRING("Expired")
+STRING("Retrieved")
+STRING("Rejected")
+STRING("Deferred")
+STRING("Unrecognised")
+STRING("Indeterminate")
+STRING("Forwarded")
+)
+
+
+LINEAR(mm_state,
+STRING("Draft")
+STRING("Sent")
+STRING("New")
+STRING("Retrieved")
+STRING("Forwarded")
+)
+
+NUMBERED(store_status, 
+ASSIGN("Success",128)
+ASSIGN("Error-transient-failure",192)
+ASSIGN("Error-transient-network-problem",193)
+ASSIGN("Error-permanent-failure",224)
+ASSIGN("Error-permanent-service-denied",225)
+ASSIGN("Error-permanent-message-format-corrupt",226)
+ASSIGN("Error-permanent-message-not-found",227)
+ASSIGN("Error-permanent-mmbox-full",228)
+)
+
+NUMBERED(descriptor_params,
+ASSIGN("type", 130)
+)
+/* MM7/SOAP stuff -- *** order of these matters wrt Req/Rsp *** */
+NAMED(mm7tag,
+VNSTRING(MM7_5, "Bcc",MM7_TAG_Bcc)
+VNSTRING(MM7_5, "CancelReq",MM7_TAG_CancelReq)
+VNSTRING(MM7_5, "CancelRsp",MM7_TAG_CancelRsp)
+VNSTRING(MM7_5, "Cc",MM7_TAG_Cc)
+VNSTRING(MM7_5, "ChargedParty",MM7_TAG_ChargedParty)
+VNSTRING(MM7_5, "Content",MM7_TAG_Content)
+VNSTRING(MM7_5, "Date",MM7_TAG_Date)
+VNSTRING(MM7_5, "DeliverReq",MM7_TAG_DeliverReq)
+VNSTRING(MM7_5, "DeliverRsp",MM7_TAG_DeliverRsp)
+VNSTRING(MM7_5, "DeliveryReportReq",MM7_TAG_DeliveryReportReq)
+VNSTRING(MM7_5, "DeliveryReportRsp",MM7_TAG_DeliveryReportRsp)
+VNSTRING(MM7_5, "DistributionIndicator",MM7_TAG_DistributionIndicator)
+VNSTRING(MM7_5, "EarliestDeliveryTime",MM7_TAG_EarliestDeliveryTime)
+VNSTRING(MM7_5, "ExpiryDate",MM7_TAG_ExpiryDate)
+VNSTRING(MM7_5, "LinkedID",MM7_TAG_LinkedID)
+VNSTRING(MM7_5, "MM7Version",MM7_TAG_MM7Version)
+VNSTRING(MM7_5, "MMSRelayServerID",MM7_TAG_MMSRelayServerID)
+VNSTRING(MM7_5, "MMStatus",MM7_TAG_MMStatus)
+VNSTRING(MM7_5, "MessageClass",MM7_TAG_MessageClass)
+VNSTRING(MM7_5, "MessageID",MM7_TAG_MessageID)
+VNSTRING(MM7_5, "Number",MM7_TAG_Number)
+VNSTRING(MM7_5, "Priority",MM7_TAG_Priority)
+VNSTRING(MM7_5, "RFC2822Address",MM7_TAG_RFC2822Address)
+VNSTRING(MM7_5, "RSErrorRsp",MM7_TAG_RSErrorRsp)
+VNSTRING(MM7_5, "ReadReplyReq",MM7_TAG_ReadReplyReq)
+VNSTRING(MM7_5, "ReadReplyRsp",MM7_TAG_ReadReplyRsp)
+VNSTRING(MM7_5, "Recipient",MM7_TAG_Recipient)
+VNSTRING(MM7_5, "Recipients",MM7_TAG_Recipients)
+VNSTRING(MM7_5, "ReplaceReq",MM7_TAG_ReplaceReq)
+VNSTRING(MM7_5, "ReplaceRsp",MM7_TAG_ReplaceRsp)
+VNSTRING(MM7_5, "ReplyCharging",MM7_TAG_ReplyCharging)
+VNSTRING(MM7_5, "ReplyChargingID",MM7_TAG_ReplyChargingID)
+VNSTRING(MM7_5, "Sender",MM7_TAG_Sender)
+VNSTRING(MM7_5, "SenderAddress",MM7_TAG_SenderAddress)
+VNSTRING(MM7_5, "SenderIdentification",MM7_TAG_SenderIdentification)
+VNSTRING(MM7_5, "ServiceCode",MM7_TAG_ServiceCode)
+VNSTRING(MM7_5, "ShortCode",MM7_TAG_ShortCode)
+VNSTRING(MM7_5, "Status",MM7_TAG_Status)
+VNSTRING(MM7_5, "StatusCode",MM7_TAG_StatusCode)
+VNSTRING(MM7_5, "StatusText",MM7_TAG_StatusText)
+VNSTRING(MM7_5, "Subject",MM7_TAG_Subject)
+VNSTRING(MM7_5, "SubmitReq",MM7_TAG_SubmitReq)
+VNSTRING(MM7_5, "SubmitRsp",MM7_TAG_SubmitRsp)
+
+VNSTRING(MM7_5, "TimeStamp",MM7_TAG_TimeStamp)
+VNSTRING(MM7_5, "To",MM7_TAG_To)
+VNSTRING(MM7_5, "TransactionID",MM7_TAG_TransactionID)
+VNSTRING(MM7_5, "VASID",MM7_TAG_VASID)
+VNSTRING(MM7_5, "VASPErrorRsp",MM7_TAG_VASPErrorRsp)
+VNSTRING(MM7_5, "VASPID",MM7_TAG_VASPID)
+VNSTRING(MM7_5, "Fault",MM7_TAG_Fault)
+VNSTRING(MM7_5, "Details",MM7_TAG_Details)
+VNSTRING(MM7_5, "faultcode",MM7_TAG_faultcode)
+VNSTRING(MM7_5, "faultstring",MM7_TAG_faultstring)
+VNSTRING(MM7_5, "MessageType",MM7_TAG_MessageType)
+VNSTRING(MM7_5, "replyChargingSize", MM7_TAG_replyChargingSize)
+VNSTRING(MM7_5, "replyDeadline", MM7_TAG_replyDeadline)
+VNSTRING(MM7_5, "DeliveryReport", MM7_TAG_DeliveryReport)
+VNSTRING(MM7_5, "allowAdaptations", MM7_TAG_allowAdaptations)
+VNSTRING(MM7_5, "DistributionIndicator",MM7_TAG_distributionIndicator)
+VNSTRING(MM7_5, "UACapabilities",MM7_TAG_UACapabilities)
+)
+
+NUMBERED(soap_status,
+ASSIGN("Success", 1000)
+ASSIGN("Partial success", 1100)
+ASSIGN("Client error", 2000)
+ASSIGN("Operation restricted", 2001)
+ASSIGN("Address Error", 2002)
+ASSIGN("Address Not Found", 2003)
+ASSIGN("Multimedia content refused", 2004)
+ASSIGN("Message ID Not found", 2005)
+ASSIGN("LinkedID not found", 2006)
+ASSIGN("Message format corrupt", 2007)
+ASSIGN("Server Error", 3000)
+ASSIGN("Not Possible", 3001)
+ASSIGN("Message rejected", 3002)
+ASSIGN("Multiple addresses not supported", 3003)
+ASSIGN("Command Rejected", 3005)
+ASSIGN("General service error", 4000)
+ASSIGN("Improper identification", 4001)
+ASSIGN("Unsupported version", 4002)
+ASSIGN("Unsupported operation", 4003)
+ASSIGN("Validation error", 4004)
+ASSIGN("Service error", 4005)
+ASSIGN("Service unavailable", 4006)
+ASSIGN("Service denied", 4007)
+)
+#undef LINEAR
+#undef STRING
+#undef VSTRING
+#undef NUMBERED
+#undef ASSIGN
+#undef VASSIGN
+#undef NAMED
+#undef NSTRING
+#undef VNSTRING

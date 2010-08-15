@@ -1,0 +1,15 @@
+Requires:
+- For media
+	- libiconv
+	- sox, lame, mpg123, amrencoder/amrdecoder (audio)
+	- imagemagick (image)
+	
+- Mail server (postfix/sendmail)
+
+Wap setup:
+ - Port 9200/9201 for UDP WAP when not using security (connectless or otherwise) should be set aside
+ - Send port param with 9201 as port ID
+ - Put http proxy on ports 9200 and 9201 for HTTP based connections
+ - For nokia 6600, either manual setup, or send GPRS settings then change to use GSM and put in number  to call (send
+   ) proxy address, etc.
+

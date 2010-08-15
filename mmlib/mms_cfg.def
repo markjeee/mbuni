@@ -1,0 +1,223 @@
+/*
+ * Mbuni - Open  Source MMS Gateway 
+ * 
+ * MMS Config structure definitions
+ * 
+ * Copyright (C) 2003 - 20058 Digital Solutions Ltd. - http://www.dsmagic.com
+ *
+ * Paul Bagyenda <bagyenda@dsmagic.com>
+ * 
+ * This program is free software, distributed under the terms of
+ * the GNU General Public License, with a few exceptions granted (see LICENSE)
+ */
+
+#ifndef OCTSTR
+#error OCTSTR not defined.
+#endif
+
+#ifndef SINGLE_GROUP
+#error SINGLE_GROUP not defined.
+#endif
+
+#ifndef MULTI_GROUP
+#error MULTI_GROUP not defined.
+#endif
+
+/* config-source: If it exists, the rest of the conf file is
+ * ignored. Instead, use the provided lib as the reader of the
+ *  config info. (See mms_cfg-impl.h for details)
+ */
+ 
+SINGLE_GROUP(config-source,
+	OCTSTR(config-library)
+	OCTSTR(config-library-init-param)
+)
+
+SINGLE_GROUP(core,
+	OCTSTR(log-file)
+	OCTSTR(log-level)
+	OCTSTR(access-log)
+	OCTSTR(http-proxy-host)
+	OCTSTR(http-proxy-port)
+	OCTSTR(http-proxy-exceptions)
+	OCTSTR(http-proxy-username)
+	OCTSTR(http-proxy-password)
+	OCTSTR(ssl-client-certkey-file)
+	OCTSTR(ssl-server-cert-file)
+	OCTSTR(ssl-server-key-file)
+	OCTSTR(ssl-trusted-ca-file)
+	OCTSTR(http-interface-name)
+)
+
+SINGLE_GROUP(mbuni,
+	OCTSTR(name)
+	OCTSTR(hostname)
+	OCTSTR(host-alias)
+	OCTSTR(local-prefixes)
+	OCTSTR(storage-directory)
+	OCTSTR(queue-manager-module)
+	OCTSTR(queue-module-init-data)
+	OCTSTR(max-send-threads)
+	OCTSTR(send-mail-prog)
+	OCTSTR(unified-prefix)
+	OCTSTR(strip-prefixes)
+	OCTSTR(maximum-send-attempts)
+	OCTSTR(mm1-maximum-notify-attempts)
+	OCTSTR(mmsbox-maximum-request-attempts)
+	OCTSTR(default-message-expiry)
+	OCTSTR(max-message-expiry)
+	OCTSTR(queue-run-interval)
+	OCTSTR(mm1-queue-run-interval)
+	OCTSTR(send-attempt-back-off)
+	OCTSTR(sendsms-url)
+	OCTSTR(sendsms-username)
+	OCTSTR(sendsms-password)
+	OCTSTR(sendsms-global-sender)
+	OCTSTR(mms-port)
+	OCTSTR(mm7-port)
+	OCTSTR(allow-ip)
+	OCTSTR(deny-ip)
+	OCTSTR(email2mms-relay-hosts)
+	OCTSTR(billing-module-parameters)
+	OCTSTR(billing-library)
+	OCTSTR(resolver-module-parameters)
+ 	OCTSTR(resolver-library)
+        OCTSTR(detokenizer-module-parameters)
+        OCTSTR(detokenizer-library)
+	OCTSTR(prov-server-notify-script)
+	OCTSTR(prov-server-sub-status-script)
+	OCTSTR(notify-unprovisioned)
+	OCTSTR(mms-notify-text)
+	OCTSTR(mms-notify-unprovisioned-text)
+	OCTSTR(mms-to-email-txt)
+	OCTSTR(mms-to-email-html)
+	OCTSTR(mms-to-email-default-subject)
+	OCTSTR(mms-message-too-large-txt)
+	OCTSTR(mms-client-msisdn-header)
+	OCTSTR(mms-client-ip-header)
+        OCTSTR(allow-ip-type)
+        OCTSTR(optimize-notification-size)
+	OCTSTR(content-adaptation)
+	OCTSTR(send-dlr-on-fetch)
+	OCTSTR(sendmms-port)
+	OCTSTR(sendmms-port-ssl)
+	
+	OCTSTR(mmsbox-mt-filter-library)
+	OCTSTR(mmsbox-mt-always-multipart)
+
+	OCTSTR(mmsbox-admin-port)
+	OCTSTR(mmsc-admin-port)
+	OCTSTR(admin-port-ssl)
+	OCTSTR(admin-password)
+
+	OCTSTR(admin-allow-ip)
+	OCTSTR(admin-deny-ip)
+
+	OCTSTR(event-logger-module)	
+	OCTSTR(event-logger-module-parameters)	
+
+	OCTSTR(mm5-module)	
+	OCTSTR(mm5-module-parameters)	
+
+	OCTSTR(mmsbox-cdr-module)
+	OCTSTR(mmsbox-cdr-module-parameters)
+
+	OCTSTR(mmsc-services)
+)
+
+MULTI_GROUP(mmsproxy,
+	OCTSTR(name)
+	OCTSTR(host)
+	OCTSTR(allowed-prefix)
+	OCTSTR(denied-prefix)
+	OCTSTR(send-mail-prog)
+	OCTSTR(confirmed-delivery)
+	OCTSTR(unified-prefix)
+	OCTSTR(strip-prefixes)
+)
+
+MULTI_GROUP(mms-vasp,
+	OCTSTR(vasp-id)
+	OCTSTR(type)
+	OCTSTR(mm7-version)
+	OCTSTR(mm7-soap-xmlns)
+	OCTSTR(use-mm7-soap-namespace-prefix)
+	OCTSTR(short-code)
+	OCTSTR(short-codes)
+	OCTSTR(vasp-username)
+	OCTSTR(vasp-password)
+	OCTSTR(vasp-url)
+ 	OCTSTR(mms-to-email-handler)
+	OCTSTR(mms-to-local-copy-handler)	
+	OCTSTR(send-uaprof)
+	OCTSTR(throughput)
+)
+
+MULTI_GROUP(send-mms-user,
+	OCTSTR(username)
+	OCTSTR(password)
+	OCTSTR(faked-sender)
+	OCTSTR(delivery-report-url)
+	OCTSTR(read-report-url)
+	OCTSTR(mmsc)
+)
+
+MULTI_GROUP(mmsc,
+	OCTSTR(id)
+	OCTSTR(group-id)
+   	OCTSTR(vasp-id)
+	OCTSTR(mmsc-url)
+	OCTSTR(incoming-username)
+	OCTSTR(incoming-password)
+	OCTSTR(incoming-port)
+        OCTSTR(allow-ip) 
+        OCTSTR(deny-ip)
+	OCTSTR(allowed-prefix)
+	OCTSTR(denied-prefix)
+	OCTSTR(denied-sender-prefix)
+	OCTSTR(allowed-sender-prefix)
+	OCTSTR(incoming-port-ssl)
+	OCTSTR(max-throughput)
+	OCTSTR(type)
+	OCTSTR(mm7-version)
+	OCTSTR(mm7-soap-xmlns)
+	OCTSTR(use-mm7-soap-namespace-prefix)
+	OCTSTR(mm7-mt-filter-params)
+	OCTSTR(reroute)
+	OCTSTR(reroute-mmsc-id)
+	OCTSTR(reroute-add-sender-to-subject)
+	OCTSTR(mmsc-library)
+	OCTSTR(custom-settings)
+	OCTSTR(no-sender-address)
+
+	OCTSTR(default-vasid)
+)
+
+MULTI_GROUP(mms-service,
+	OCTSTR(name)
+	OCTSTR(get-url)
+        OCTSTR(post-url)
+        OCTSTR(exec)
+        OCTSTR(file)
+        OCTSTR(text)
+        OCTSTR(faked-sender)
+        OCTSTR(catch-all)
+        OCTSTR(omit-empty)
+        OCTSTR(suppress-reply)
+        OCTSTR(accept-x-mbuni-headers)
+        OCTSTR(pass-thro-headers)
+        OCTSTR(assume-plain-text)
+        OCTSTR(accepted-mmscs)
+	OCTSTR(denied-mmscs)
+	OCTSTR(denied-receiver-prefix)
+	OCTSTR(allowed-receiver-prefix)
+        OCTSTR(keyword)
+        OCTSTR(aliases)
+        OCTSTR(http-post-parameters)
+	OCTSTR(service-code)
+	OCTSTR(extra-reply-content-header)
+)
+#undef OCTSTR
+#undef SINGLE_GROUP
+#undef MULTI_GROUP
+

@@ -1,0 +1,914 @@
+2010-08-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* mmsbox-mm1 change: sleep after each run, so that under high load, we are not 
+	  hanging up too soon on modem
+2010-08-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed mmsbox-mm1 hangs under load, thanks to Piotr Isajew <pki at ex.com.pl>
+2010-07-02 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed crash due to octstr_delete on immutable string in mm7 receiver
+2010-05-26 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. patches/cleanups thanks to SATOH Fumiyasu <fumiyas at osstech.jp>
+2010-01-25 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* SunOS locking fixes (thanks to Ian Donaldson (iand at ekit-inc.com)
+2010-01-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix, throttling in MMSC VASP connections
+2009-12-01 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Change queue location for MM1 notifications
+2009-11-22 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added au audio format transcoding (thanks to Thilani Abeysinghe <a.thilani at gmail.com>)
+2009-10-14 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added Billing info to mmssend (thanks to Vincent CHAVANIS <v.chavanis at telemaque.fr>)
+	* Fix for automake 1.1 (thanks to Vincent CHAVANIS <v.chavanis at telemaque.fr>)
+	* MMSC resolver module now takes two extra arguments: src interface (whence message received)
+	  and ID of sender on that interface (e.g. vaspid)
+2009-10-13 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor bug in mms_cfg.c -- get_bool fails if using pgsql for configs
+2009-09-08 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for compilation on FreeBSD (thanks to Revence Kalibwani)
+2009-08-13 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor improvements in mms dump
+2009-08-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added extra logging to mmsbox_mm1 code
+2009-08-06 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved handling of email recipients in mmsbox
+	* Fixed crash with email recipient
+2009-07-07 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Updated License for mmsbox mm1 module
+2009-07-02 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added mmsbox mm1 plugin
+2009-06-22 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix: GET HTTP request shouldn't have body
+2009-05-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* added mmsbox-maximum-request-attempts config param
+2009-05-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSC fix: don't send subject in notification if size optimisation turned on
+	* Added mm1-queue-run-interval config option, so that MM1 queue can be processed at different interval
+	* Fixed: When MM1 notification attempts exceed maximum, do not delete message, rather wait for expiry
+	* Added mm1-maximum-notify-attempts config option, so that number of MM1 notifications can be controlled 
+          separately from other delivery attempts
+2009-03-28 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved pgsql-queue module: re-connect to db if connections die, only allocate as many connections as needed
+2009-03-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added strip_type flag (-x) to mmsfromemail
+2009-03-03 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added -n flag to prevent stripping of host/domain part from sender address on email2mms interface
+2009-03-01 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* pgsql-queue module fix: Connection pool should return only valid (active) connections
+2009-02-25 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added ChargedParty MM7/SOAP param to mmsbox
+	* Fixed: Improper setting of log level
+2009-02-24 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Pass MM7/SOAP LinkedID to service url in mmsbox
+	* Minor improvements in pgsql-queue error reporting
+2009-02-16 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved pgsql queue module performance
+	* MM1 queue changes - expire message even if fetched at least once
+	* MMSC changes: Allow start of subset of services (MM1, MM7, Relay) on host instance using mmsc-services config variable 
+2009-02-11 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix: Improved pgsql queue processing -- prevent queue flooding
+2009-02-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix crash when message format is invalid
+2009-02-03 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix: url replacement in SMIL
+	* Fix: sendmms port setup bug in mmsbox
+2009-01-28 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix: mmsbox sendmms default content type
+2009-01-22 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix: PGSQL Queue module was not honouring send_time fully
+2009-01-21 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix in mmsc: fetch URL
+2009-01-17 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved mmsc logging
+	* mmsc tools other than mmsc no longer attempt to open admin port
+2009-01-16 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor update to mmsc mm1 notifier: cleanup
+2009-01-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fixes: Output from admin interfaces always valid XML
+	* Minor fixes: admin module
+2008-12-24 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved MM1 performance
+2008-12-17 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MM1 notify: increase parallelism
+2008-12-10 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Extra mbuni headers in mmsbox url service call
+	* mmsbox EAIF receiver bug fix thanks to Marcin Bockowski (bocian@gmail.com)
+	* Fix for email2mms handling when mms2email VASP defined
+2008-12-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MSISDN and IP request headers now list (MMSC)
+2008-12-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor patches for better Solaris compatibility (Thanks to Benno Rice <benno@ekit-inc.com>)
+2008-12-01 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. fixes to number normalisation in mmsbox
+2008-11-26 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added validityperiod sendmms cgi param
+	* Minor changes to mmsbox CDR logging to improve clarity
+	* Bug fix denied/allowed mmsc flag in mmsbox
+2008-11-21 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor improvements in DLR processing (mmsbox)
+2008-11-20 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved DLR status messages in mmsbox
+	* Minor memory leak fixed in MM7/SOAP processing
+2008-11-14 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* PSQL Queue module changes: optionally move message storage to file to improve performance
+2008-11-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved DLR delivery  to external URL (retries) in mmsbox 
+2008-11-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for base64 decoding in URI with data: schema
+2008-10-16 P. A. Bagyenda <bayenda@dsmagic.com>
+	* Minor fix for DLR relaying (mmsbox).
+2008-10-02 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added vasp-id param to mmsbox mmsc config (thanks to Christian Theil Have <christiantheilhave@gmail.com>) 
+2008-09-30 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix in mbuni management interface XML output
+2008-09-29 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved mmsbox DLR routing for status Forwarded
+2008-09-15 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Order of XML tags in MM7 packet changed (shouldn't matter, but...)
+2008-09-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved reporting of DLR Message-ID even with relay
+2008-09-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added facility for appending special response header to each message (mime) part in MM7 response
+	* Added mmsbox cdr logging
+	* Improved DLR relay when mmsbox relay used -- msgid rewrite
+2008-09-11 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSBox HTTP MMSC type added, for inter-mmsbox message relay
+	* MM5 support, basic infrastructure on the MMSC side.
+	* Added default-vasid config param to mmsbox 'mmsc' group
+2008-09-08 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSC admin interface added (start/stop/status of each VASP connection)
+	* MMSC VASP can now have multiple short codes
+2008-09-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix/addition for Content-ID handling
+	* Generalised event logger module (to facilitate alarms, etc)
+2008-09-02 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added admin interface to mmsbox (can now start/stop and see status of any mmsc connection)
+2008-09-01 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Rolled mmsrelay + mmsproxy into one item (for easier online management)
+2008-08-29 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Changes to doc for config from DLL
+	* Misc. code re-ordering for mmsbox
+2008-08-28 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added ability to load config from a module rather than from file
+2008-08-20 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added default mmsc to send-mms-user (Martin)
+2008-08-19 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix for Content-ID header in mmsbox (thanks to Vincent Chavanis <v.chavanis@telemaque.fr>)
+	* Typo fix thanks to Martin Atukunda (matlads@dsmagic.com)
+	* Fix for 3gp2 mime type (thanks to Vincent Chavanis)
+2008-08-14 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Mmsbox will now queue message to email (outgoing) if recipient looks like an email address
+2008-08-08 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix to content adaptation: Better handling of supported image types
+	  thanks to George Barros <gbarros@ipcomsa.com>
+	* Improved stability of mms binary message parser when input is bad
+2008-08-06 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Additional fixes for bad message formats causing crash
+	* Fix for incorrect From and To headers in DLR and RR messages
+2008-08-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for crash in mmsproxy with bad message type
+2008-07-18 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved scalability for mmsbox - multiple receive handlers for mmc incoming and sendmms interface
+2008-07-15 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added file type application/vnd.mbuni.url-list for basic multipart/mixed type
+2008-07-10 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed minimum size of pgsql connection pool
+	* Fix for shutdown procedure
+	* Copyright notice updates
+2008-07-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix for FROM address in MM4_delivery_report.REQ packet
+2008-07-07 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Move to compile against Kannel-CVS
+2008-07-07 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Message-ID fix -- added '@'
+2008-07-04 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fixes for PANICs in mms_msg.c
+2008-07-01 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to MM4 interface -- address formatting fix
+2008-06-27 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to MM4 .RES handling: use proxy sendmail command if present
+2008-06-26 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added pgsql-queue into build process (configure.ac)
+	* Misc. Changes to pluggable mmsbox-mmsc interface
+2008-06-24 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved queue information: Included source interface
+	* Extra identifying headers on MMS2Email interface
+2008-06-18 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* added qcelp file extension to mime type mapping
+2008-05-30 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Changed minimum version of MM7 to 5.1.0
+2008-05-30 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added send-mail-prog config param on per-MM4 connection basis
+	* MM1 fix: If device does not provide a valid WAP Profile URL, allow MMS through anyway.
+2008-05-13 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fixups on MM4 interface message coding
+2008-05-13 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Separate number normalisation for each MM4 connection.
+2008-05-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Normalisation of numbers inside messages as well
+	* Added strip-prefixes config parameter
+2008-04-18 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Various memory leak fixes (thanks to Monchanin Eric @ Skycore)
+2008-04-11 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added no-sender-address config to mmsc section: Allows you to 
+	* suppress SenderAddress SOAP/XML tag
+2008-03-26 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix: mmsbox mms-service handling of POST parameters where no % spec given
+2008-02-17 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Better throughput limit handling in MMSBox (thanks to Vincent Chavanis <vincent@telemaque.fr)
+2007-12-21 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Patches to permit compiling on SunOS
+2007-12-15 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added allowed-sender-prefix/denied-sender-prefix for mmsc group of mmsbox config
+	* Added allowed-receiver-prefix/denied-receiver-prefix to mms-service group of mmsbox config
+2007-11-27 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Bug fix in mime convertor module
+2007-11-07 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added reroute-add-sender-to-subject config param for MMSBox
+2007-09-25 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added flag to conditionally remove mm7: XML namespace prefix
+2007-09-18 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Support for custom MM7 MMC types using a loadable module.
+2007-09-17 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added pluggable MMSBOX routing using loadable module or shell script (see mmsbox_resolve.h)
+2007-09-14 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added http-interface-name config parameter
+2007-09-06 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added 'extras' directory, containing miscellaneous Mbuni addons.
+2007-08-27 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* added 'reroute' and 'reroute-mmsc-id' config. params to VAS GW MMSC configs
+2007-08-20 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Generalised MMS Queue handling interface to allow different storage/delivery mechanisms.
+2007-08-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added send-dlr-on-fetch config param to MMC settings
+2007-08-08 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added User-Agent and UAProf URL arguments to call to prov-notify script in MMC.
+2007-08-06 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix for DLR reporting in mmsbox (thanks to Skycore team)
+ 	* UACapabilities support for MM7/SOAP v6.x (thanks again to Skycore Team)
+2007-08-03 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* added mms-direction CGI param to send-mms interface (see doc for additional info)
+2007-07-27 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. fixes for DLR reporting, VAS GW
+2007-07-13  P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Introduced ability to filter MT MMS on the VAS side using a generalized module.
+	* send-mms interface now allows you to push content by specifying a url using content-url CGI param.
+	* Various minor fixes. 
+2007-06-21 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Better configurability of MM7/SOAP namespace URI and MM7 version.
+2007-06-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved DLR reporting over MM4 interface - set recipient as from address
+2007-05-08 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved MIME to MMS conversion conversion
+2007-05-05 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor improvements to DLR handling in mmsbox. (Thanks to Vincent Chavanis <vincent@telemaque.fr>)
+2007-04-13 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fixups on handling of MM4 Forward ACK messages.
+2007-04-12 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved MM7/SOAP message composition: better handling of different schema versions
+2007-04-10 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Added outgoing Digest/MD5 HTTP authentication support (thanks to Gert Horne <gert@bluetin.co.za> for funding)
+2007-04-10 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7/SOAP XMLNS string now configurable via setting per-MMC (or per-VASP) interface version
+2007-04-02 Vincent Chavanis <vincent@telemaque.fr>
+	* Added group-id field to VAS GW MMC config 
+2007-03-20 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Major corrections to MM4 functionality, bringing conformance to 3GPP TS 23.140 (Thanks to Deon van der Merwe <deonvandermerwe@gmail.com> for funding)
+2007-03-09 P. A. Bagyenda <bagyenda@dsmagic.com>
+	* Patch to fix panic in the event of missing/corrupt data file in queue (Thanks to Deon van der Merwe <deonvandermerwe@gmail.com>)
+2007-01-31 Vincent Chavanis <vincent@telemaque.fr>
+	* Patch to allow controlling content adaptation on mmsbox side from sendmms interface
+2007-01-30 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix for MM4 incoming, thanks to Vincent Chavanis <vincent@telemaque.fr> (and 
+	  Deon van der Merwe <deonvandermerwe@gmail.com> for testing)
+2007-01-24 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix crash for missing error code definition (thanks to Vincent Chavanis <vincent@telemaque.fr>)
+2006-12-28 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Removing '@' from transaction ID (thanks to Mario Noboa 
+	  <mario.noboa@teamsourcing.com.ec)
+2006-11-29 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7/SOAP when Content XML tag missing 'cid:', don't fail
+2006-11-28 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for MM7 VAS GW error code (should be VASPErrorRsp)
+2006-11-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Kannel dependency now pre-1.4.2 CVS
+2006-11-25 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor changes to remove work-arounds for Kannel GWLIB bugs (now fixed
+	 in CVS)
+2006-11-18 Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for quoting of content type parameters in MIME & HTTP messages 
+	 (Message-ID: <c51a177f0611132344s16aaaa3bo46944ce97abfd535@mail.gmail.com>)
+2006-11-11  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix in MM7 module (replycharging attribute),
+	 thanks to Michel Martin <michel.marti@objectxp.com>
+2006-11-07  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved source organisation (Changelog populated, better version string)
+
+2006-11-03  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Adding version file
+
+2006-10-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* mm7: removal of some-url dummy in SOAP header
+
+2006-10-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor clean-up: fold *_shell MMSC external modules into main code
+
+2006-10-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Quotes around content subtype. Logica MMC parsing badly. Sigh!
+
+2006-10-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* updates to MM7/SOAP: Add mm7 namespace to all tags
+
+2006-10-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Remove quotes from text/xml content type (to please Logica MMC!)
+
+2006-10-16  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fix: mm7/soap error code 4004 erroneously reported as 4001
+
+2006-10-12  Paul A. Bagyenda <bagyenda@dsmagic.com>
+
+	* Mbuni updated to Kannel 1.4.1 -- initial stab
+
+2006-09-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7: Minor fix - remove MessageID field from all response types
+	  but SubmitRsp
+
+2006-09-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7/SOAP fix: correctly map MessageID field to Message-ID on MM1
+	  side configure.ac: add -Wall -O4 flags for gcc (Linux/Mac)
+
+2006-09-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSC fix: Do not copy DLRs to VASP who receives copies of local
+	  messages
+
+2006-09-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7/EAIF: Force the message-id message header to whatever sent by
+	  MMSC
+
+2006-08-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix: MM7 DeliverRsp should not have message ID parameter
+	  (thanks to Stefan Koenig <s.Koenig@dimoco.at>)
+
+2006-08-11  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Added ServiceCode parameter to both sendmms cgi vars, and also
+	  to mms-service
+
+2006-08-07  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Slight bug fixes - syntax issues
+
+2006-07-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added message-ID parameter to prov-notify-script
+
+2006-07-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* configure.ac fix for freebsd
+
+2006-07-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Improved handling of retrieve-conf message received on send
+	  interfaces
+
+2006-07-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Slight changes in default log file paths (to separate mmsbox
+	  log from mmsc log)
+
+2006-07-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Add MIME-Version header to email messages outgoing - check for
+	  short code in globalsender before checking if local recipient
+
+2006-07-13  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Minor fix for ? char in sendsms url - Minor fix for default
+	  queue run interval (was 0.1, now 5 secs)
+
+2006-06-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Allow Send-MMS port to support HTTP POST from HTML-style forms,
+	  including enctype multipart/form-data
+
+2006-06-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Add: default message expiration for mmsbox message
+
+2006-05-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Initial import - sample mmsbox config
+
+2006-05-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* further improvements to HTTP POST data sent by MMSBox to a
+	  service: Always add filename parameter to each variable.
+
+2006-05-29  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSbox: Improved sending of data to service - try to send all
+	  parts to look like files
+
+2006-05-29  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Max send attempts does not expire message, only expiry time does
+
+2006-05-29  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fix: reduce length of trans-id and msgid
+
+2006-05-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fix: allow mmsbox incoming mmsc conn without auth
+
+2006-05-22  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed: double-free in mmsglobalsender
+
+2006-05-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Bug fix, failure when x-wap-profile header missing
+
+2006-05-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Fix for send local MMS to VASP
+
+2006-05-13  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  CVS repository change noted in documentation
+
+2006-05-13  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Rationalised MM7 config for MMSC - Moved functions out of mmlib
+	  that do not belong there - Improved logging in mmsproxy -
+	  detokenize module improvements (send full url when no token) -
+	  Add default mms-to-email subject config - Misc. changes
+
+2006-05-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* further improvements to detokenizer module usage - send request
+	  IP only to module if token missing
+
+2006-05-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Further fixes to detokenizer module usage - Code movement (from
+	  mmlib to more specific mmsc where it is used)
+
+2006-05-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* improved detokenizer_shell module: Added default token as "x"
+
+2006-05-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* improved detokenizer_shell module: Script now receives 2nd
+	  argument as request-ip
+
+2006-05-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix, better detection of IPv6 addresses.
+
+2006-05-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved logging of NotifyResp messages om MM1 interface
+
+2006-05-03  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added config param to restrict response from mms-service (VAS
+	  GW) - Added param for headers that should be sent to MMC are
+	  received from mms-service response (VAS GW) - Fixed bug where
+	  omit-empty param for VAS GW was actually ignored
+
+2006-05-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor bug fix (double free) in mmsbox
+
+2006-04-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor type cast -- compiler warning on 64bit machines
+
+2006-04-18  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Minor improvements to logging of failed MM7 connections -
+	  Reduced default queue run interval
+
+2006-04-12  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc patches - message-ID format, resolver module fallbacks -
+	  thanks to Dziugas Baltrunas
+
+2006-04-12  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* More mmsbox fixes to please Ericsson MMC - Added 'vasid'
+	  send-mms URL parameter
+
+2006-04-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor addition for MM7/SOAP -- add start element MIME type
+
+2006-03-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Further cleanups for MM7/Soap and mmsbox - better error
+	  reporting, better xml content
+
+2006-03-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* minor fix to shell-based resolver
+
+2006-03-24  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Changes to mm7/soap module to please java packages (Resin --
+	  SOAP-ENV header prefered) - Removal of outdated config params
+
+2006-03-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to mmsbox - send_eaif missing X-Mms-Transaction-ID
+	  header
+
+2006-03-10  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  More graceful crash when config groups mbuni & core missing -
+	  Documentation fixes
+
+2006-03-03  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* improved quoting of args
+
+2006-03-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added escaping of shell characters in parameters to sendmail
+	  command - Cleanup documentation (colour schemes)
+
+2006-02-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added missing DeliveryReport header for MM7/SOAP
+
+2006-02-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	*  Email2MMS now uses relay-hosts config rather than relay
+	  prefixes (nod to number portability)
+
+2006-02-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed error in interpretation of DeliveryReport field of
+	  MM7/SOAP - Further cleanups of uaprof module
+
+2006-02-24  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix: Immediate fetch and store of missing UAProf data on demand
+
+2006-02-24  Paul A. Bagyenda <bagyenda@dsmagic.com>
+
+	* remove profile engine startup in mmsrelay and mmssend
+
+2006-02-24  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added gw_assert() calls and better error checking in mms_msg
+	  module
+
+2006-02-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix for uaprof handling in mmsproxy -- improved fallback
+
+2006-02-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Bug fix in mms_billing_shell.c - honour return value of script
+
+2006-02-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to mmlib/mms_cfg.c -- added errno.h
+
+2006-02-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Moved all config file handling out of Kannel into a Mbuni module
+
+2006-02-09  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Typo fixes
+
+2006-01-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Crash fix in mmsbox related to send-mms http interface bug
+
+2006-01-11  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. memory leak fixes (thanks to lool@dooz.org
+
+2006-01-07  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* mmlib fix for missing transaction-id
+
+2005-12-13  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix for User-Agent version number string.
+
+2005-12-12  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* increase max length of storage-directory file name
+
+2005-11-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* mms_retrieveconf crash fix: ignore source message type
+
+2005-11-09  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fix: configure --with-kannel-dir should work
+
+2005-11-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Allow host-alias field to contain '/' and other nasty characters
+
+2005-11-04  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved sender/recipient address format checking
+
+2005-10-31  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* update INSTALL file
+
+2005-10-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* adding mmlib/.cvsignore
+
+2005-10-25  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Updated documentation and patch for mms-to-email and local mms
+	  vasp handlers
+
+2005-10-25  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added mms-to-email and local mms handler VASP
+
+2005-10-25  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Adding .cvsignore files Small bug fix to mmsmobilesender (if
+	  recipient does not support mms and no message set, do not send
+	  it)
+
+2005-10-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* license fixes
+
+2005-10-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Message-ID insertion bug fix
+
+2005-10-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* add makefile.am
+
+2005-10-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixes for message id mis-spelling in encoder/decoder
+
+2005-10-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Updates to documentation for new build procedures
+
+2005-10-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* CVS cleanup to allow better/easier builds on Debian and others
+
+2005-10-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix to ensure shutdown of mmsproxy on signal
+
+2005-10-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Update documentation to cover VAS GW changes.
+
+2005-10-17  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Adding license to misc files, changing comment format in
+	  configure.ac.
+
+2005-09-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added request ip to detokenizer interface
+
+2005-09-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Bug fix: Keep message ID constant even when message crosses
+	  multiple interfaces (mm1, mm7, etc)
+
+2005-09-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed usage of allow-ip/deny-ip in mmsproxy and mmsbox
+
+2005-09-22  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improvements to mmsproxy (do not free NULL Octstr)
+
+2005-09-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* adding mmsbox.h to cvs
+
+2005-09-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixes for http-post-parameters in mmsbox, better handling of
+	  x-mbuni-to header
+
+2005-09-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. MM7 and EAIF fixes for MMSBox functionality
+
+2005-09-12  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc bug fixes in mmsbox module
+
+2005-09-09  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSBox bug fixes
+
+2005-09-07  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* First implementation of mmsbox functionality, making Mbuni
+	  provide client-side VAS functionality,  similar to that provided
+	  by Kannel for SMS.
+
+2005-09-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MMSBox init code
+	* Adding SSL support to Mbuni
+
+2005-09-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Re-organisation of functions and files in preparation for adding
+	  MMSBox functionality
+
+2005-08-03  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* m-retrieve-conf message not deleted from mobile queue after
+	  notification to receiver
+
+2005-07-26  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Corrected use of notify-unprovisioned flag
+
+2005-07-26  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* updates to summary change log
+
+2005-07-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added content-adpatation config param to turn on/off content
+	  adaptation
+
+2005-07-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fix: If phone supports content type */* then it accepts even
+	  presentations -- thanks to Mathias Hofmann
+
+2005-07-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Kannel patch update: coding of content-id value fixed, fix to
+	  detect charset values in CAPS.  Email2MMS: Removed extra email
+	  headers that caused problems for some phones.
+
+2005-07-06  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Attempted fix for string quouting problem!
+
+2005-07-05  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* reverting change to wap/wsp_header.c for quote (")
+
+2005-07-04  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixed mis-counting of send attempts in mmsrelay Improved handling
+	  of email addresses in queue module Removed WSP_QUOTE patch to
+	  kannel's wap/wsp_headers.c -- it appears it is not needed.
+
+2005-07-04  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added support for HTTP proxy host/port a la Kannel (used for all
+	  HTTP outgoing transactions)
+
+2005-07-04  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved reporting via prov-notify script Removed
+	  prov-notify-script-arg config param
+
+2005-07-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* bug fix: insert content-type header in message if missing, try
+	  and guess what it should be by examining message body
+
+2005-07-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* mime conversion bug affecting content adaption fixed
+
+2005-06-23  Martin Atukunda <matlads@dsmagic.com>
+	* correct typo including mms_mm7soap.c twice, should be
+	  mms_mm7soap.h
+
+2005-06-23  Martin Atukunda <matlads@dsmagic.com>
+	* add mms_mm7soap.h to files included by make dist
+
+2005-06-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor update to kannel patch
+
+2005-06-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* misc. updates
+
+2005-06-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fixed crash in mm7soap proxy
+
+2005-06-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Removed dangerous use of tmpnam()
+
+2005-05-27  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Removed hard-coded reference to /tmp/ directory.
+
+2005-05-26  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to EAIF module
+
+2005-05-24  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Improved handling of mal-formed binary messages
+
+2005-05-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* check for null body when mime converting
+
+2005-05-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor code changes to enable warning-free compile with gcc 4.0
+
+2005-05-11  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fix for non-standard opendir() on reiserfs
+
+2005-05-05  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to mmsproxy (max number of mmbox messages returned in
+	  query)
+
+2005-05-05  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fix to mmsproxy
+
+2005-05-02  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Update to mbuni-kannel-patch (OMA-OTA code).
+
+2005-04-29  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor bug fix to mm7soap handler -- no crash if http body is
+	  empty.
+
+2005-04-25  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixes to documentation
+
+2005-04-25  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor changes to configure script (remove dependencies implied by
+	  kannel dependency)
+
+2005-04-22  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Changes to config file: All queue-directory directives replaced
+	  by single 'storage-directory' directive.
+
+2005-04-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added vaspid to billing and cdr modules
+
+2005-04-20  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* update to Makefile.in
+
+2005-04-19  Søren Hansen <sh@warma.dk>
+	* Added another couple of files missing from the dist
+
+2005-04-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* update to mmlib/Makefile.in -- via automake
+
+2005-04-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Removing trailing slashes from queue dir name
+
+2005-04-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* misc. fixes to view.conf message creation.
+
+2005-04-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Changes to queue directory structure (now uses a maildir-style
+	  structure) Misc. fixes.
+
+2005-04-19  Søren Hansen <sh@warma.dk>
+	* Added mms_strings.def to EXTRA_DIST
+
+2005-04-18  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* misc fixes to mmsproxy
+
+2005-04-18  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. fixes to eaif implementation
+
+2005-04-18  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* EAIF implementation, first stab.
+
+2005-04-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* misc. code syntax fixes.
+
+2005-04-15  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor code fixes.
+
+2005-04-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. documentation updates - for mmsrelay and mm7
+
+2005-04-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* mmsglobalsender & mmsmobilsender folded into one -- mmsrelay.
+
+2005-04-14  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MM7/SOAP implementation now tested + misc bug fixes
+
+2005-04-08  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor fixes to mmbox code, more mm7
+
+2005-04-07  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. bug fixes, beginnings of MM7 work.
+
+2005-04-04  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* fixes to detokenizer, added detonizer func + adding of token to
+	  url sent in notification fixed issue with dlsym when using fink's
+	  dlopen removed token comparison in fetch (i.e. rationalised use
+	  of fetch url parameters)
+
+2005-04-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* minor bug fix.
+
+2005-04-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor bug fixes.
+
+2005-04-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added documentation to CVS.
+
+2005-04-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Small fixes for IP address senders in mmsproxy.
+
+2005-04-01  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Minor updates to mmsmobilsender to allow for dumping Ind. PDU
+
+2005-03-31  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Time stamp updates on configure files, removing old mmbox stuff
+	  from mmsmobilesender
+
+2005-03-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* added missing autoconf files, updated others.
+
+2005-03-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixes for crashing mmsproxy when sender address not found.
+
+2005-03-30  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Misc. updates (autoconf)
+
+2005-03-29  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Slight changes to message decoder.
+
+2005-03-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Updated example conf.
+
+2005-03-28  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Putting configure stuff back.
+
+2005-03-24  Søren Hansen <sh@warma.dk>
+	* Fixed a few memory freeing issues which were probably only
+	  significant on platforms with REALLY braindead malloc/free
+	  implementations
+
+2005-03-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* updated license in config script
+
+2005-03-23  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Change of License to GPL
+
+2005-03-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added directory for misc patches.
+
+2005-03-21  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* MMbox code, now (mostly) up to speed.
+
+2005-03-19  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added mmbox handler module, fixes to message coder/decoder.
+
+2005-03-19  Søren Hansen <sh@warma.dk>
+	* Added some error checking
+
+2005-03-16  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Fixes to message decoding/encoding after introduction of mmbox
+	  changes.
+
+2005-03-16  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Added Soren's changes for optimising size of notification.ind
+
+2005-03-16  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Initial changes for mmbox, addition of removed autoconf files...
+
+2005-03-12  Søren Hansen <sh@warma.dk>
+	* Added configuration parsing for allow-ip-type
+
+2005-03-11  Søren Hansen <sh@warma.dk>
+	*  Sends Error-sending-address-unresolved back to unresolved
+	  senders
+	   * Adds detokenizing functionality
+	   * Adds a few example billing, resolver and detokenizer libraries
+
+2005-03-11  Søren Hansen <sh@warma.dk>
+	* Cleaned up the CVS tree
+
+2005-03-10  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Preparing for MMbox changes
+
+2005-03-10  Søren Hansen <sh@warma.dk>
+	* A few references to billing-module should have been to
+	  resolver-module. Fixed.
+
+2005-03-10  Paul A. Bagyenda <bagyenda@dsmagic.com>
+	* Initial import
+
+$Date: 2010/08/09 09:38:55 $

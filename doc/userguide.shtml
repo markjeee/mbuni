@@ -1,0 +1,4347 @@
+
+<!-- when on site, use #include virtual="header.html" -->
+<!--  otherwise use this: -->
+
+<!-- begin header -->
+<html>
+<head>
+<title>Mbuni: Open Source MMS Gateway - User documentation</title>
+<meta name="author" content="info@mbuni.org" />
+<meta name="Description" content="Open Source MMS Gateway" />
+<meta name="robots" content="ALL" />
+
+
+<style type="text/css">  
+  <!--
+    H1       {font-family:Geneva,Verdana,Book Antiqua,Cochin,Calisto MT;color:#000000;}
+   H2       {font-family:Geneva,Verdana,Book Antiqua,Cochin,Calisto MT,Verdana;color:#
+000000;}
+   H3       {font-family:Geneva,Verdana,Book Antiqua,Cochin,Calisto MT,Verdana;color:#
+000000;}
+   H4       {font-family:Geneva,Verdana,Book Antiqua,Cochin,Calisto MT,Verdana;color:#
+000000;}
+   body     {font-family:Geneva,Verdana,Book Antiqua,Cochin,Calisto MT,Verdana;color:#
+000000;}
+   a:link   {text-decoration:underline;color:#0000bb;}
+   a:visited{text-decoration:underline;color:#bb0000;}
+   a:active {text-decoration:underline;color:#bbbbbb;}
+   a:hover  {text-decoration:underline;color:#bbbbbb;}
+  -->
+</style>
+
+</head>
+
+<body topmargin="0" leftmargin="0" rightmargin="0"
+marginwidth="0" marginheight="0">
+
+<h1>Mbuni: Open Source MMS Gateway</h1>
+<!-- end header -->
+
+
+
+  <H2><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1"></A><!--TableOfContentsAnchor:End-->User Guide</H2>
+  
+This document describes the installation and usage of the MMS Gateway.
+
+<h4>Table of Contents</h4>
+<!--TableOfContents:Begin-->
+<UL>
+<LI><A HREF="#Section_.1.1">Chapter 1: Introduction</A>
+ <UL>
+<LI><A HREF="#Section_.1.1.1">Overview of MMS</A></LI>
+<LI><A HREF="#Section_.1.1.2">Features</A></LI>
+<LI><A HREF="#Section_.1.1.3">Requirements</A></LI>
+</UL></LI>
+<LI><A HREF="#Section_.1.2">Chapter 2: Installing The Gateway</A><UL>
+<LI><A HREF="#Section_.1.2.1">Installing Kannel</A></LI>
+<LI><A HREF="#Section_.1.2.2">Installing Mbuni MMS Gateway</A></LI>
+<LI><A HREF="#Section_.1.2.3">Installing Required Components</A></LI>
+</UL></LI>
+<LI><A HREF="#Section_.1.3">Chapter 3: Running the Gateway</A><UL>
+<LI><A HREF="#run_mmsc">Running Mbuni as a MMSC</A></LI>
+<LI><A HREF="#run_vas">Running Mbuni as a VAS Gateway</A></LI>
+<LI><A HREF="#Section_.1.3.1">General Configuration File</A></LI>
+<LI><A HREF="#mmsc_conf">MMSC-specific Configuration</A><UL>
+<LI><A HREF="#mm7">MM7 Configuration</A></LI>
+<LI><A HREF="#mm4">MM4 Configuration</A></LI>
+</UL>
+</LI>
+
+<LI><A HREF="#mmsvas_conf">MMS VAS Gateway-specific Configuration</A><UL>
+<LI><A HREF="#mmsc_vasp">MMSC Connection Configuration</A></LI>
+<LI><A HREF="#sendmms">SendMMS User Configuration</A></LI>
+<LI><A HREF="#mms_service">MMS Service Configuration</A></LI>
+</UL>
+</LI>
+
+</UL></LI>
+<LI><A HREF="#Section_.1.4">Chapter 4: Gateway Architecture</A><UL>
+<LI><A HREF="#mmsc_arch">MMSC Architecture</A><UL>
+<LI><A HREF="#Section_.1.4.1">MMS Proxy</A></LI>
+<LI><A HREF="#Section_.1.4.2">MMS Relay</A></LI>
+
+<LI><A HREF="#Section_.1.4.4">SMTP/Mail Interface</A></LI>
+<LI><A HREF="#Section_.1.4.5">Utilities</A></LI>
+</UL>
+</LI>
+<LI>
+<A HREF="#vas_arch">VAS Gateway Architecture</A></LI>
+</UL>
+<LI><A HREF="#Section_.1.5">Chapter 5: Tips & Tricks</A><UL>
+<LI><A HREF="#Section_.1.5.1">Passing MSISDNs to Mbuni</A></LI>
+<LI><A HREF="#Section_.1.5.2"> Sample Kannel WAP configuration</A></LI>
+</UL>
+<LI><A HREF="#Section_.1.6">Chapter 6: Log Files</A></LI></UL>
+</UL>
+<!--TableOfContents:End-->
+
+  <br>
+
+  <H3><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.1"></A><!--TableOfContentsAnchor:End-->Chapter 1: Introduction</H3>
+
+
+ <p>MMS offers mobile
+users enhanced messaging capabilities like the ability to send pictures and
+sound from a cell phone. It is generally considered the natural successor to
+the very popular SMS service.</p>
+
+<p>MMS usage has
+continued to grow since introduction, and it is expected that projects
+such as Mbuni should further boost the adoption of MMS and its
+explosion.  
+</p>
+<p>
+The Mbuni Project attempts to provide that
+little bit of boost to MMS adoption/growth, by providing two important parts of the
+MMS infrastructure:  For the network &quot;operator&quot; Mbuni
+includes a fully-fledged MMS switching centre (MMSC), while for the MMS
+content provider Mbuni includes a MMS Value Added Services (VAS)
+Gateway (MMSBox).</p>
+
+<p>Mbuni implements all major MMS interfaces, including phone-to-phone (so-called MM1
+interface), phone-to-email (MM3), inter-MMSC (MM4) and MMS VAS
+(MM7). The level of support for each type of interface is listed on <a
+								       href="status.shtml">status 
+    page</a> of the website.
+</p>
+
+<p>Mbuni is
+inspired, in part by the Kannel project, and utilises Kannel's GWLIB and WAP
+libraries. Kannel provides
+well-designed, simple interfaces for management of octet strings, lists,
+threads, servers, etc, and a certified WAP implementation. This made
+it a natural choice for Mbuni, rather than re-inventing the wheel.</p>
+
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.1.1"></A><!--TableOfContentsAnchor:End-->Overview of MMS</H4>
+  
+<p>The Multimedia
+Messaging Service (MMS), is intended to provide a rich set of content to
+subscribers (pictures, audio, games, etc). It supports both sending
+and receiving of rich content by 
+properly enabled client devices. MMS is a non-real-time delivery service, much
+like SMS or email. The service utilises a store-and-forward usage model. </p>
+
+
+<p> MMS is designed to be transported
+largely over IP rather than traditional GSM (SS7) networks. It is also designed
+to interoperate with other IP services such as email and WAP. In fact, MMS
+messages are typically transported over WAP, and are encoded using WAP MIME
+formats. </p>
+
+
+<p> Multimedia messages can be originated by or terminate to end-user
+  client devices (i.e. MMS-enabled phones) or third party applications
+  (typically used by MMS content providers).  In the MMS architecture,
+  the MMSC acts as the
+message-switching system within the core network, while the MMSBox
+  acts as the message dispatch and content management system on the
+  VAS (third party) side. The overall architecture is
+shown below.</p>
+
+<center>
+<img src="images/mmsgw.png" width="430" height="362">
+</center>
+<p >The elements
+shown in the figure can be summarised as follows:</p>
+
+<ul>
+<li><b>MMS
+Client: </b>A device through
+which the user receives or sends multimedia messages. This might be a phone or
+a PC-based MMS client. The Client sends messages to and receives messages from
+the MMSC using WAP/HTTP as transport.
+<li><b>MMS
+Gateway:</b> Switches
+messages between different MMS clients and between MMS and Email. The Gateway
+may also interface with other gateways to exchange messages destined for
+foreign networks. This is also more properly known as the MMSC.
+<li><b>MMS
+Server:</b> This component
+ provides persistent storage of messages on the network. Typically
+users can access stored messages via a web interface.
+<li><b>Other MMS
+Systems:</b>Other systems,
+such as Third Party MMS systems (e.g. MMS VAS providers) can interface to the
+MMSC to receive and send MMS content. The Interface used is termed
+MM7.
+<li><b>SMSC: </b>The MMSC utilises WAP Push to send
+notifications to MMS Clients. These are typically sent using SMS as the bearer
+service, hence the need for a link to a Short Message Service Centre.
+</ul>
+
+
+<p>Typically, the
+message cycle begins with a user sending a multimedia message (MM) from the MMS
+client. The client must be configured for MMS, which includes bearer settings
+(i.e. GPRS or GSM/CSD settings), WAP gateway address and MMS Gateway address (a
+URL). On receipt of the message, the MMSC decides how to deliver the
+  message (e.g. to another MMS client or to a VASP), and proceeds to
+  dispatch the message. A VASP may also originate a message to the
+  MMSC, for onward delivery.</p>
+
+
+<p>An MM is typically a multi-part message
+with pictures, sound, text and other media. Each part of the message is
+identified by media (MIME) type, name and/or Content ID. Usually the
+  message is of a multipart/related MIME type, with the start element
+  being a <a href="http://www.w3.org/AudioVideo/">SMIL</a> part that
+  controls how the message should be displayed.
+<br><br>
+ When submitting a
+message, the MMS client indicates the intended recipient list, but usually not
+the sender address, which the MMSC retrieves from the WAP
+gateway. Like Email, a single MMS can specify
+multiple recipients (MSISDNs and Email addresses), and it is up to the MMSC
+to ensure correct delivery to each of the recipients. </p>
+
+
+<p>When the MMSC
+receives a message destined for an email address, it typically re-codes the
+message as standard MIME and passes it on to an SMTP server for delivery. Email
+messages received are similarly re-coded as MMS and forwarded to the relevant
+MMS Client.</p>
+
+<p>When the MMSC receives a message
+destined to MMS Clients in the area served by the MMSC, the message is
+stored and an MMS notification sent to the recipient via WAP Push. On receipt
+of the notification, the client typically fetches the message via a URL
+provided in the notification.</p>
+
+
+
+<p>When a recipient requests an incoming MM
+from the server, it indicates to the server its capabilities for a User Agent
+Profile URL. The profile data includes such things as supported media types,
+screen size, supported character sets, etc. Typically, the MMSC will re-code
+the MM to suit the client's capabilities before returning the message. Messages
+destined to email may also be re-coded to make them more suitable for email
+readers.</p>
+
+<p><![if !supportEmptyParas]>&nbsp;<![endif]></p>
+
+<p>The MMSC may also interface with a
+subscriber database, which controls message delivery and billing. The
+subscriber database will provide such information as which subscribers are
+provisioned for MMS, tariffs, etc.</p>
+
+<p>
+  On the VASP side of things, typically the content provider receives
+  a request MM from a subscriber and must respond with an MM. The
+  content to be sent back depends on the contents of the request.
+</p>
+
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.1.2"></A><!--TableOfContentsAnchor:End-->Features</H4>
+
+
+<p>Mbuni MMS gateway is a modular software system, designed to
+be full-featured, efficient and simple, supporting current generation 
+multimedia messaging. Mbuni operates in one of two modes: As an MMSC
+  or as a VAS gateway. </p>
+
+<ul>
+<li> Operating as <b>MMSC</b>, Mbuni provides:
+<ul>
+<li>	Phone-to-phone messaging
+
+<li>	Automatic content adaptation: The server modifies message
+content depending on the capabilities of the receiving terminal 
+
+<li>	Integrated Email-to-MMS and MMS-to-Email gateway
+
+<li>	Support for persistent storage of messages for subscribers (MMbox).
+
+<li>	Inter-MMSC message exchange (MM4 interface)
+<li>    Support for MMS Value Added Service Providers using MM7
+protocols (SOAP or EAIF).
+<li>	Support for integration with subscriber database to enable
+smart handling of handsets that do not support MMS, handsets not
+provisioned, etc. 
+
+<li>	Support for flexible billing structure through billing/CDR plug-in architecture
+
+<li>	Bearer (data) technology neutral: Works with GSM/CSD or GPRS.
+
+</ul>
+<li>Operating as a <b>VAS Gateway</b>, Mbuni provides:
+
+ <ul>
+   <li> Support for both SOAP and EAIF connectivity with an operator
+   MMSC (plus a special HTTP-based relay mechanism)
+   <li> Multiple connections to different MMSC of different types can
+   be maintained
+  <li> MMS content can be loaded from file, URL or as the output of a
+  program
+  <li> MM composition from <a href="http://www.w3.org/AudioVideo/">SMIL</a>: The gateway will automatically fetch
+  all components referenced in the SMIL and add them to the MM.
+  <li> A URL interface for MM dispatch.
+ </ul>
+
+</ul>
+
+<p>
+
+The Gateway is designed and tested to conform to Open Mobile Alliance
+(OMA), WAP and 3rd Generation Partnership Project (3GPP) MMS standards
+including:  
+
+<ul>
+<li>	WAP: 209
+<li>	OMA: MMS v1.2, UAProf v1.1
+<li>	3GPP: TS 23.140
+</ul>
+
+</p>
+
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.1.3"></A><!--TableOfContentsAnchor:End-->Requirements</H4>
+
+<p>
+Mbuni is being developed on MacOS X and Linux systems using the C programming language.  It should compile and run on any similar system.
+</p>
+
+<p>
+Mbuni utilises some libraries that are part of the Kannel source,
+ specifically GWLIB and WAP libraries. In order to install Mbuni  you
+ will need to install Kannel (and therefore fulfil those
+ dependencies Mbuni shares with it).  
+</p>
+<a name="required"></a>
+ The following additional components are required:
+<ul>
+<li>	Libiconv v2.0 or higher is required for character set conversions
+<li>	Audio conversion tools required by the content adaptation module:
+<ul><li>	Sox  from <a
+href="http://sox.sourceforge.net">sox.sourceforge.net</a> 
+<li>	Lame (v3.93 or higher) from <a
+href="http://www.mp3dev.org">www.mp3dev.org</a> 
+<li>	Mpg123 from <a href="http://www.mpg123.de">www.mpg123.de</a>
+<li>	AMR encoder/decoder from <a
+href="http://www.3gpp.org">www.3gpp.org</a> (modified, <a href="#install">see below</a>) 
+</ul>
+<li>	Image conversion tools required by the content adaptation
+module:
+<ul>
+o	ImageMagick from <a href="http://www.imagemagick.org">www.imagemagick.org</a>
+</ul>
+<li>	Mail server such as Postfix (<a href="http://www.postfix.org">www.postfix.org</a>)
+<li>	You will also need to be running a WAP gateway (we recommend Kannel).
+<li>	You may optionally need to run an HTTP proxy such as Squid
+(<a href="http://squid-cache.org">squid-cache.org</a>), since some
+newer phones (e.g. Nokia 6600) do 
+not send MMS over WAP but directly over HTTP via an HTTP Proxy. 
+</ul>
+
+Hardware requirements will depend on amount of traffic, required
+response times, etc. Keep in mind however that the gateway performs a
+lot of heavy multimedia re-coding tasks, particularly during content
+adaptation, so you should always err on the side of more rather than
+less power. 
+
+<a name="install"></a>
+<H3><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.2"></A><!--TableOfContentsAnchor:End-->Chapter 2: Installing The Gateway</H3>
+
+<p>This section
+explains the steps required to install the gateway. <strong>If you are
+  installing from a binary distribution, you may safely skip to <a
+								   href="#required_comps">here</a></strong>.
+</p>
+
+<p>
+In brief, to install Mbuni, you need to:
+<ul>
+ <li>Download and install required packages (such as libXML, libiconv)
+ <li>Download and install Kannel CVS (pre-1.4.2)
+ <li>Download and install Mbuni 
+ <li>Download, patch and install the AMR encoder/decoder
+ <li>Download and install additional <a href="#required">requried</a> packages
+</ul>
+</p>
+
+<p>The source code
+for Mbuni is available for download from the <a
+href="http://www.mbuni.org/downloads.shtml">download area</a>  of the website
+</p>
+
+
+
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.2.1"></A><!--TableOfContentsAnchor:End-->Installing Kannel</H4>
+
+<p>In order to compile the software, you
+will first need to download  and install Kannel CVS (2008-07-07) from <a
+href="http://www.kannel.org/download/kannel-snapshot.tar.gz">kannel.org</a>:</p>
+
+
+
+<p>Unpack the kannel
+source files using a command like:</p>
+
+<p><tt>tar xvf 
+kannel-snapshot.tar.gz</tt></p>
+
+
+
+<p >Then proceed to
+compile and install Kannel normally:</p>
+
+<p>
+
+<tt>cd kannel-snapshot; ./configure</tt>
+<br>
+<tt>make install</tt>
+</p>
+
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.2.2"></A><!--TableOfContentsAnchor:End-->Installing Mbuni MMS Gateway</H4>
+
+
+<p>Download and
+unzip/tar Mbuni sources in a directory of your choice:</p>
+
+
+<tt>tar xzf mbuni-<i>version</i>.tgz</tt>
+
+
+<p>Where <i>version</i> is the verion of Mbuni (e.g. 1.2.0). Compile and
+install mbuni as follows:</p>
+
+<p ><tt>cd
+mbuni-<i>version</i></tt><br>
+
+<tt>./bootstrap</tt><br>
+<tt> ./configure</tt><br>
+<tt>make insall</tt>
+</p>
+You need to have AutoMake for the above to work
+<p >If you installed
+Kannel in a non-standard location, you will need to supply the location to <tt>configure</tt> using <tt>--with-kannel=<i>kannel_directory</i></tt></p>
+
+<h5>Installing from CVS</h5>
+<p> If you want to try out the development version of Mbuni, you can
+ download it from the CVS on sourceforge.net:</p>
+
+<tt>cvs  -d:pserver:anonymous@mbuni.cvs.sourceforge.net:/cvsroot/mbuni login</tt><br>
+
+ followed by<br>
+
+<tt> cvs -z3  -d:pserver:anonymous@mbuni.cvs.sourceforge.net:/cvsroot/mbuni co -P mbuni</tt><br>
+
+ you can then 
+ install as above.
+
+
+<p >Mbuni consists of
+3 programs:
+<ul>
+<li><tt>mmsc</tt>
+<li><tt>mmsfromemail</tt>
+<li><tt>mmsbox</tt>
+</ul>
+which are by
+default installed in <tt>/usr/local/bin</tt>
+</p>
+
+<p ><tt>mmsc</tt> is the MMSC component. It consists of the relay
+  server (<tt>mmsrelay</tt>), which routes
+incoming messages to email, other MMS gateways, MMS clients/handsets,
+  and the client-facing MMSC interface (<tt>mmsproxy</tt>) via which messages are 
+sent and received by MMS clients (MM1 as well as MM7). <br><br><tt>mmsfromemail </tt>is
+the email2MMS MMSC module. <br><br><tt>mmsbox</tt> is the VAS gateway
+
+</p>
+
+
+<a name="required_comps"></a>
+<H4><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.2.3"></A><!--TableOfContentsAnchor:End-->Installing Required Components</H4>
+
+<p>If you intend to use Mbuni as an MMSC, be sure to install all other required
+components as detailed above, otherwise parts of the MMS gateway may not
+function correctly. </p>
+
+
+
+<p>Mbuni expects that an AMR decoder is installed and can be invoked
+as: <br>
+<tt>amrdecoder <i>infile outfile</i> </tt>
+<br>
+
+to decode an AMR
+file to header-less (raw), 16-bit signed, mono, 8kHz audio samples in
+the output file. (Input and output files may be '-' for standard input
+or output respectively.)</p>
+
+<p>Similarly, it is expected that an AMR encoder
+called <tt>amrencoder</tt> exists and can be executed as follows: 
+<br>
+<tt>amrencoder <i>mode infile outfile</i></tt>
+<br>and convert raw, 16-bit signed, 8kHz
+ mono audio samples in the input file to AMR using the supplied
+ encoding mode. 
+
+<br>
+<br>
+For the AMR encoder/decoder, we have adapted the sample provided on the 3GPP
+website. Follow the instructions below to install it:<br>
+
+<ul>
+<li>Download the AMR encoder/decoder source from <a
+href="http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-520.zip">here</a>
+
+<li>unzip/unpack the zip file, and unpack the source within:<br>
+
+<tt>unzip 26104-520.zip</tt><br>
+
+<tt>mkdir amr</tt><br>
+
+<tt>cd amr</tt><br>
+<tt>unzip ../26104-520_ANSI_C_source_code.zip</tt><br>
+
+<li>Download the AMR code patch from the mbuni.org <a href="downloads.shtml">download section</a> and apply as follows:<br>
+
+<tt>patch -p1 &lt; ../mbuni-amr-patch</tt>
+ <li> You should then compile and install the AMR encoder/decoder as follows:<br>
+
+ <tt>make -f makefile.gcc</tt><br>
+<tt>cp -f amrdecoder amrencoder /usr/local/bin</tt>
+</ul>
+This AMR encoder
+is not very efficient but it works (which is important!)</p>
+
+<H3><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.3"></A><!--TableOfContentsAnchor:End-->Chapter 3: Running the Gateway</H3>
+ 
+ How one runs Mbuni depends on its intended use or mode of
+ operation. We look at the two usage scenarios below.
+ 
+<h4><a name="run_mmsc"></a>Running Mbuni as a MMSC</h4>
+<p>To run the MMSC, you must run  the command <tt>mmsc</tt>. <tt>mmsfromemail</tt>
+should be called from your MTA (SMTP Mailer) to convert
+and deliver an MMS from an email sender. The order in which they are started
+is unimportant. </p>
+
+<h4><a name="run_vas"></a>Running Mbuni as a VAS Gateway</h4>
+<p> To run Mbuni as a VAS gateway you must run <tt>mmsbox</tt> </p>
+
+<H4><!--TableOfContentsAnchor:Begin--><A
+NAME="Section_.1.3.1"></A><!--TableOfContentsAnchor:End-->General Configuration File</H4>
+
+<p>All Mbuni programs expect the configuration file to be passed as the last
+argument on the command line (default is <tt>mbuni.conf</tt>). The
+configuration file controls most aspects of 
+the operation of the gateway. </p>
+
+<p >The configuration file format is the same as that used
+by Kannel. The configuration file consists of groups of configuration
+variables. Groups are separated by empty lines, each variable is defined on its
+own line. Each group begins with the group name. Comments are lines that begin
+with a hash (#) and are ignored.
+<br><br>
+A
+variable definition line has the name of the variable, an equals sign (=) and
+the value of the variable. The name of the variable can contain any characters
+except white space and equals. The value of the variable is a string, with or
+without quotation marks (&quot;) around it. Quotation marks are needed if the value
+begins or ends with white space or contains special characters. Normal C escape
+character syntax works inside quotation marks.</p>
+
+<p >The variable <i>group</i> marks the
+beginning of a new group with the given name.</p>
+
+<b>Configuring Mbuni using a Loadable Module</b>
+<p>Mbuni supports  configuration using a dynmically linked module.
+  This is particularly useful if you wish to configure Mbuni from a
+  database or a script. <br/><br/>
+ In order to do this, the first (and only) group in the config file
+  must be a <tt>config-source</tt> group. An example is shown below:
+<br><br>
+
+<tt>
+group = config-source<br>
+config-library = <i>path_to_dll</i><br>
+config-library-init-param = <i>init_param_for_dynamic_lib</i><br>
+</tt>
+<br><br>
+Mbuni will load the supplied DLL and get all subsequent configuration
+parameters from the module. (See <tt>mms_cfg-imp.h</tt> for DLL requirements.)
+
+<br><br>
+
+</p>
+
+<b>Configuration Items</b>
+<p>
+If not using a module as configuration source,
+the <tt>config-source</tt> group must not exist. The rest of the
+configuration file must have the format as described above. Groups
+and respective items are described below.
+</p>
+<p >The core group is
+<i>core</i> and defines the log file location, log level (amount of debugging
+information &#8211; the lower the number the more debugging
+information), the location of the access log, the HTTP interface to
+listen on for incoming connections, HTTP proxy
+host/port if any (HTTP proxy host/port and HTTP interface name 
+ are specified using the exact same parameters as used by Kannel.) and
+SSL client and server certificate files to be used for incoming and
+outgoing HTTPS connections, if Kannel and Mbuni are compiled to have
+SSL enabled. The syntax for specifying SSL certificates is exactly as
+that used by Kannel. 
+
+<br>
+<br>
+<tt>
+
+group =
+core<br>
+log-file
+= log/mmsgw.log<br>
+log-level
+= 0
+<br>
+access-log = log/access.log<br>
+http-interface-name = &quot;*&quot;<br>
+</tt>
+</p>
+<p>
+This should be followed by the main gateway configuration group (<i>mbuni</i>). 
+<br>
+<br>
+<tt>
+
+group =
+mbuni<br>
+
+name =
+&quot;My MMSC&quot;<br>
+
+hostname
+= ds.co.ug<br>
+
+host-alias
+= mmsc<br>
+
+local-prefixes
+= 075;+25675;25675<br>
+
+directory-store
+= spool<br>
+
+max-send-threads
+= 5<br>
+
+send-mail-prog
+= /usr/sbin/sendmail -f %f %t<br>
+
+ ...<br>
+</tt>
+</p>
+<p >The table below
+lists all the configuration directives. The column <b>Mode</b>
+  indicates operation mode in which the parameter is applicable:
+  Config params marked <i>VAS GW</i>
+   are only applicable when 
+  operating in VAS Gateway mode, while those marked <i>MMSC</i>
+  are only applicable  when
+    operating in 
+  MMSC mode. The rest are used in both modes.</p>
+
+<table border=0 cellspacing=2 cellpadding=1 >
+ <tr>
+  <td  valign=top>
+  <b>Variable
+  Name</b>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top>
+  <b>Mode</b>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top>
+  <b>Type</b>
+  &nbsp; &nbsp;</td>
+  <td valign=top>
+  <b>Description</b>
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td valign=top><tt>group </tt>
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td valign=top>
+  mbuni
+  &nbsp; &nbsp;</td>
+  <td  valign=top>
+  Mandatory
+  variable
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr>
+
+  <td valign=top ><tt>name </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i> 
+  &nbsp; &nbsp;
+</td>
+
+
+  <td valign=top >
+  string 
+  &nbsp; &nbsp;</td>
+
+  <td valign=top>
+  User-friendly
+  name for the Gateway, used in notices, etc
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top ><tt>hostname
+  </tt>
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  string
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  Local hostname.
+  This is added as a qualifier to the sender address when MMS is forwarded to
+  Email or to a foreign MMSC via SMTP. Defaults to <tt>localhost</tt>
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top ><tt>host-alias
+  </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td valign=top>
+  string
+  &nbsp; &nbsp;</td>
+  <td  valign=top s>
+  Short MMC
+  hostname. This is used in generating message IDs as well as the
+  message retrieval URL (sent as part of the MMS 
+  notification): For instance if you have this as <tt>mmsc</tt> then
+  the retrieval URL will have the form
+  <tt>http://mmsc/<i>msgtoken</i></tt> (no port is added). Be sure to
+  keep this value short (as some handsets do not like long URLs in MMS
+  notifications), and it must not include non-alphanumeric characters
+  as this can screw up URL location parsing. If you do not supply a
+  host alias, the gateway will create a long form URL
+  (http://<i>hostname:port/msgtoken</i>) when it sends notifications 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top ><tt>local-prefixes</tt> 
+  &nbsp; &nbsp;</td>
+
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td valign=top >
+  Number
+  prefix list
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  Number prefixes
+  that should be considered local. Messages to numbers that match these
+  prefixes will be delivered locally (via <tt>mmsrelay</tt>)
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top ><tt>mmsc-services</tt> 
+  &nbsp; &nbsp;</td>
+
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td valign=top >
+  Comma-separated list
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  Comma-separated list of MMSC services to be started/activated on
+  this host. List should contain one or more of the following
+  items <tt>MM1</tt>, <tt>MM7</tt>, <tt>Relay</tt>: These activate MM1
+  message processing, MM7 message processing, and the Relay function
+  respectively. To start all services, leave out this directive
+  entirely, or set it to <tt>All</tt>.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td valign=top >
+  <tt>storage-directory
+  </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td valign=top >
+  Directory name
+  (string)
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Directory where Mbuni creates message queues, MMBoxes, and the
+  User Agent profiles cache. Mbuni creates a set of sub-directories in here
+  for each function
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>max-send-threads</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Number
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  How many queue
+  processing threads to start. A higher value means messages get delivered
+  faster.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <a name="send-mail-prog"/><tt>send-mail-prog</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Command to use for sending email messages 
+  (MMS-to-email or to foreign MMS gateways via SMTP). This command can include variables: %f
+  &#8211; replaced with the message from address, %t &#8211; replaced with the
+  recipient address (RFC 822 compliant), %s &#8211; the message subject, %m
+  &#8211; the message ID. (NOTE: Special shell characters &mdash;
+  &amp;, |, $, (, ), and so on &mdash are escaped
+  after variable substitution, hence parameter quoting is not necessary.)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>strip-prefixes
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Number list
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  A semi-colon (;) separated string of  prefixes that should (if
+  found) be stripped of the phone number <i>prior</i> to number
+  normalisation as described below. Only the first prefix that matches
+  will be stripped. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>unified-prefix
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Number list
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  A string to
+  unify received phone numbers, so that routing works correctly. Format is that
+  first comes the unified prefix,
+  then all prefixes which are replaced by the unified prefix, separated with
+  comma (','). For example &quot;+256,000256,0;+,000&quot; should
+  ensure correct UG prefixes. If 
+  there are several unified prefixes, separate their rules with semicolon (';')
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>maximum-send-attempts
+  </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Maximum number
+  of attempts gateway must make to deliver message before giving up (e.g.
+  mobile phone is off, VAS service is down, email domain is unavailable)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>mm1-maximum-notify-attempts
+  </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Maximum number
+  of attempts gateway must make to notify a device of a pending
+  message on the MM1 interface, before giving up. Defaults to <tt>maximum-send-attempts</tt>
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mmsbox-maximum-request-attempts
+  </tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Maximum number
+  of attempts VAS Gateway must make to fetich a MMS service URL before
+  giving up. Defaults to <tt>maximum-send-attempts</tt> 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+
+  <td  valign=top >
+  <tt>default-message-expiry</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Default number
+  of seconds in which message expires and is purged from queue (if not yet
+  delivered). This value is overridden by whatever is in the message.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>max-message-expiry</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Maximum age (in seconds) allowed for all messages. If set, this
+  determines when messages must mandatorily be expired. This cannot be
+  overridden by the expiry value requested in the message. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>queue-run-interval</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Real
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  How many
+  seconds between each queue run
+  &nbsp; &nbsp;</td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>mm1-queue-run-interval</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Real
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  How many
+  seconds between each queue run for the MM1 queue. Defaults to the
+value given above (<tt>queue-run-interval</tt>)
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>queue-manager-module</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Library to handle queue/message storage and processing (see
+  <tt>mms_queue.h</tt> for details)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>queue-module-init-data</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+ Initialiser data for queue/message storage engine.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>send-attempt-back-off</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  Integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+   The exponential back-off factor to employ on subsequent message
+  delivery attempts, when a delivery attempt fails.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>sendsms-url</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+</td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  URL of the
+  service through which SMS can be sent to a mobile subscriber (e.g. for WAP
+  Push). It is expected that this url expects/supports Kannel-style send-sms
+  parameters (udh, from, to, text, etc.)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>sendsms-username</tt>
+
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+  </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Username to
+  pass (for authentication) to send-sms URL
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>sendsms-password</tt>
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+  </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Password to
+  pass (for authentication) to send-sms URL
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>sendsms-global-sender</tt>
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+  </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Optional sender
+  (<i>to</i> field) to use in send sms url 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-port</tt>
+
+  &nbsp; &nbsp;</td>
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+  </td>
+
+  <td  valign=top >
+  Integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Port on which <tt>mmsproxy</tt> listens for MMS messages from MMS
+  clients (Default 
+  is 8191). 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>mm7-port</tt>
+
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+  </td>
+
+  <td  valign=top >
+  Integer
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Port on which <tt>mmsproxy</tt> listens for MM7 requests from Value
+  Added Services providers. If this port is not supplied, the MM7
+  sub-system is not started.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>allow-ip</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  List of IP
+  addresses
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses of hosts allowed to use/access the Send MMS Port (MM1
+  interface for MMSC
+  or SendMMS port  for VAS Gateway). You can use
+  this for instance to insist that only connections coming via a known/trusted
+  WAP gateway are serviced by the MMSC. Leave out to allow all machines to connect. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>deny-ip</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  List of IP
+  addresses
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses of hosts <i>not</i> allowed to use/access the Send MMS Port (MM1
+  interface for MMSC
+  or SendMMS port  for VAS Gateway). 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>mms-client-msisdn-header</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Comma-separated list of HTTP
+  request headers MMSC should look for to determine sender MSISDN.
+  WAP gateway should insert one of these headers as part of MMS request to indicate MSISDN
+  of sender. Note that typically the MMS client does not indicate its MSISDN in
+  the MMS message, it is up to the gateway to discover this and insert it. We
+  rely on the WAP gateway to provide the MSISDN as an HTTP request header
+  (default header name is <tt>X-WAP-Network-Client-MSISDN</tt>) 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-client-ip-header</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Comma-separated list of HTTP
+  request headers  MMSC should look for to determine sender IP
+  address. WAP gateway or HTTP proxy should insert one of these
+  headers as part of MMS request to
+  indicate IP Address
+  of sender. Similar to the above, if the MSISDN is not set, then we
+  assume that the client is identified by IP address, which we extract
+  from the request headers (using this header). Default header name
+  is <tt>X-WAP-Network-Client-IP</tt>. If the header is not
+  found, we assume the IP address as seen by Mbuni's MM1 interface. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>allow-ip-type</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+   Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Set this to false to prevent Mbuni  accepting and processing messages from
+  senders identified by IP address (i.e. not by MSISDN). Default: True.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>optimize-notification-size</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Set this to true make Mbuni attempt to squeeze MMS notifications
+  in one WAP Push SMS, by leaving out subject and sender
+  fields. Default: false
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>content-adaptation</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Set this to false to turn off content adaptation in Mbuni. This will
+  cause the MMSC to ignore client capabilities when sending messages,
+  and could cause problems so beware! Default: true
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>send-dlr-on-fetch</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  The MMSC sends a confirmation delivery report to the sender only
+  when the recipient confirms receipt on the MM1 interface. If you
+  want a report as soon as the recipient fetches the message (before
+  receipt of the acknowledge-ind MM1 packet) set this to true.  Default: false
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>email2mms-relay-hosts</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Number list
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  A semi-colon separated list of hosts/domains. When MMS is received
+  via SMTP, the gateway needs to determine whether it is for a local or a
+  foreign recipient. To determine if the recipient is local recipient, we use
+  the resolver module, if supplied. (Note that default resolution
+  uses <tt>local-prefixes</tt> setting to determine if the recipient
+  is local, returning the local MMSC name, if not, then it checks each
+  of the defined relays to see if the   recipient address is for one
+  of them, by checking the prefixes, returning the matching
+  proxy/relay name.) The  resolver should return a host name that is
+  matched against this setting. If any name matches, the message is
+  queued, otherwise it is discarded.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>billing-library</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Optional
+  library containing billing and CDR functions. This library is loaded at
+  runtime and should contain functions to be called to effect billing and CDR
+  generation. See <tt>mms_billing.h</tt> for
+  details. (<a href="#builtin"><tt>builtin:shell</tt></a> supported as a special built-in library.)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>billing-module-parameters</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Parameters to
+  pass to the billing module specified above when it is loaded. This is a
+  generic string whose interpretation is entirely up to the module.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+
+ <tr >
+  <td  valign=top >
+  <tt>mmsbox-cdr-module</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Optional
+  library containing CDR functions for mmsbox. This library is loaded at
+  runtime and should contain functions to be called to effect CDR
+  logging for the VAS Gateway. See <tt>mmsbox_cdr.h</tt> for
+  details. (Default behaviour is to log CDR to tab-delimited file <tt><i>storage-dir</i>/mmsbox-cdr.asc</tt>)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mmsbox-module-parameters</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Parameters to
+  pass to the mmsbox CDR module specified above when it is loaded. This is a
+  generic string whose interpretation is entirely up to the module.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>resolver-library</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Optional
+  library containing functions for resolving recipient MSISDN to hostname
+  of Proxy-Relay that should handle the message (on the MMC side) or
+  the connected MMC that should (internally) route an incoming MM7
+  message (on the MMSBOX side).  <br> For Mbun MMSC, supplying this libary
+  over-rides the <tt>local-prefixes</tt> setting given above. If the
+  Proxy-Relay hostname returned by the module is the hostname of the
+  local MMSC, then the recipient is considered local. See
+  <tt>mms_resolve.h</tt> for details. (See <tt>mmsbox_resolve.h</tt> for usage under
+  mmsbox). (<a
+  href="#builtin"><tt>builtin:shell</tt></a> supported as a special
+  built-in library.) 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>resolver-module-parameters</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>ALL</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Parameters to
+  pass to the Resolver module specified above when it is loaded. This is a
+  generic string whose interpretation is entirely up to the module.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+  <tr >
+  <td  valign=top >
+  <tt>detokenizer-library</tt>
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Optional
+  library containing functions for finding  MSISDN from request URL
+  sent by client. The last part of URL is treated as a string that is
+  interpreted by the library and transformed into an MSISDN. This libary
+  is only a fall-back in case the default sender address resolution
+  fails. See
+  <tt>mms_detokenize.h</tt> for details. (<a href="#builtin"><tt>builtin:shell</tt></a> supported as a special built-in library.)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>detokenizer-module-parameters</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Parameters to
+  pass to the De-tokenizer module specified above when it is loaded. This is a
+  generic string whose interpretation is entirely up to the module.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>prov-server-notify-script</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Subscriber
+  database interface script 1: This script will be called by the gateway to
+  notify the subscriber database of per-subscriber events such as when a
+  subscriber sends a message, successfully fetches a message, etc. This script
+  is called with 4 arguments. Argument 1 is one of fetched, sent,
+  failedfetch; argument 2 is the subscriber MSISDN; argument 3, in case of a
+  failed fetch provides a description of the error (e.g. message
+  expired); argument 4 is the message ID (if any). NOTE: Any missing
+  argument is passed as a quoted empty string for ease of parsing in
+  the script. 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>prov-server-sub-status-script</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  string
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Subscriber
+  database interface script 2: This script is called
+  by <tt>mmsrelay</tt> to determine whether the recipient's 
+  device supports MMS. The script should exit with a value of 0 to indicate
+  that the device does not support receipt of MMS notifications; 1 to indicate
+  that the device supports MMS; -1 if the subscriber is not known or not
+  provisioned for MMS. The return value determines how
+  <tt>mmsrelay</tt> will deliver the message (see below). 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top>
+  <tt>notify-unprovisioned</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Whether
+  subscribers who are not provisioned for MMS should receive any notifications
+  (e.g. SMS) when an MMS message is received for them.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top>
+  <tt>mms-notify-text</tt>
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Message to send
+  to device that does not support MMS, when a message is received for the user.
+  This message is sent as plain SMS via the Send SMS URL specified above.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-notify-unprovisioned-text</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top>
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top>
+  Message to send
+  to devices that are not provisioned for MMS (only if
+  <tt>notify-unprovisioned</tt> is true).
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-message-too-large-txt</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  If a device
+  tries to fetch a message, which during content adaptation is determined to be
+  too large for the target device (based on capabilities data supplied by the
+  device), the message is discarded, this text is sent to the device instead as
+  part of an MMS message.
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-to-email-html</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  string
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  When an MM is
+  destined for email, we must format it to make it more suitable for email
+  readers. (For instance, the SMIL part of the MM will make no sense to most email
+  readers.) The gateway formats
+  the message as follows: It generates a multi-part MIME message with the main
+  part being an HTML entity in which MM parts are embedded. The text given here
+  is tagged at the bottom of the HTML. 
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>mms-to-email-txt</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  This string is
+  placed in the MMS converted to email as an alternative to the HTML part, for
+  email clients that do not support HTML.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>mms-to-email-default-subject</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>MMSC</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+    This string is used as the default message subject when sending
+  MMS to email in the event that no subject is defined in the message
+  &nbsp; &nbsp;</td>
+ </tr>
+
+
+ <tr >
+  <td  valign=top >
+  <tt>sendmms-port</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  number
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  The port on which the MMS VAS gateway listens for incoming MMS send
+  requests. (Optional.)
+  &nbsp; &nbsp;</td>
+ </tr>
+ <tr >
+  <td  valign=top >
+  <tt>sendmms-port-ssl</tt>
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+Boolean
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+    Set to true if SendMMS port of VAS Gateway should be secure
+  (HTTPS). This is only supported if Mbuni is compiled with SSL support.
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr >
+  <td  valign=top >
+  <tt>mmsbox-mt-filter-library</tt>
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+
+  <td valign=top >
+  <i>VAS GW</i>
+  &nbsp; &nbsp;
+ </td>
+
+  <td  valign=top >
+  Optional  library to be used for filtering/transforming all content (except
+  SMIL), while building the MT MMS from a SMIL file (or from a
+  file). This is useful if say you want to implement custom
+  filtering/transformation of content (e.g. DRM  wrappers around
+  selected content).  Note that only elements 
+  referenced by URL/file name (e.g. within the returned SMIL or if fetched by
+  the send-mms interface via URL)  are filtered. See
+  <tt>mmsbox_mt_filter.h</tt> for details. Also see
+  <tt>mm7-mt-filter-params</tt> config variable in the <a href="#mmsc_vasp">VAS specific
+  config section</a>.
+  &nbsp; &nbsp;</td>
+ </tr>
+ 
+</table>
+<br>
+<a name="builtin"></a><h4>Built-in billing, resolver and detokenizer
+    modules</h4> 
+Mbuni supports one type of built-in modules: Shell script
+    handlers. Each expect a parameter that is a shell script that is
+    used as follows:
+<ul>
+<li> If  <tt>billing-library</tt> configuration parameter is set
+  to <tt>builtin:shell</tt>, the <tt>billing-module-parameters</tt>
+  must the path to the shell script to be called by Mbuni to provide
+  billing and CDR handling. For each message, the script will be with invoked
+  each recipient as follows:
+  <br><tt><i>script from_address to_address</i></tt>
+<br>
+ If the script returns with a non-zero exit status, the message is
+ discarded.
+<li> If <tt>resolver-library</tt> is set
+  to <tt>builtin:shell</tt>, <tt>resolver-module-parameters</tt> must
+  be set to a the path to the shell script to be invoked for each
+  destination address to determine how to deliver the message. The
+  script is invoked with one command line parameter (the destination
+  address) and should output (on standard output) the hostname of the
+  home MMSC (or MM7 connection ID in the case of <tt>mmsbox</tt>), to which the message should be routed.
+<li>If <tt>detokenizer-library</tt> is set to <tt>builtin:shell</tt>
+  then <tt>detokenizer-module-parameters</tt> should be set to the
+  script that should be called to resolve the last part of the MM1
+  request URL (the token) or
+  sender IP address to sender number.  The shell is called with two
+  arguments: The URL token and the IP address (in that order), and
+  should output (on standard output) the sender number.
+</ul>
+<br>
+<a name="mmsc_conf"></a>
+<h4>MMSC-specific Configurations</h4>
+ This section describes extra configuration sections that should only
+ be used when Mbuni is configured to operate as an MMSC. 
+
+<a name="mm7"></a>
+<h5>MM7 Configuration</h5>
+
+<!--- MM7 stuff -->
+<p >MMS Value-Added Service Providers (VASPs)  are configured using
+one or more <i>mms-vasp</i> groups:</p> 
+
+<br>
+<tt>
+group =
+mms-vasp<br>
+
+vasp-id = newcorp<br>
+
+type  =
+soap<br>
+
+short-code
+= 100<br>
+vasp-username
+= newscorp<br>
+vasp-password
+= news123<br>
+
+vasp-url
+= http://mmsc1:pass@example.vasp.com:8080/mm7<br>
+</tt>
+
+<br>
+
+<table border=0 cellspacing=2 cellpadding=2 >
+ <tr>
+  <td  valign=top >
+  <b>Variable</b>
+  </td>
+  <td  valign=top >
+  <b>Type</b>
+  </td>
+  <td  valign=top >
+  <b>Description</b>
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>group</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+  <tt>mms-vasp</tt>
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>vasp-id</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  User friendly
+  name
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>type</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  This should be one of: soap, eaif
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mm7-version</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   Optional. The MM7 version to use on this interface. (defaults are &quot;5.3.0&quot; for
+  XML/SOAP, &quot;3.0&quot; for EAIF.) For SOAP, this is
+  used as the value for the MM7Version XML node. For EAIF it is
+  reported in the HTTP headers. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mm7-soap-xmlns</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   Optional. The namespace URI for the &quot;mm7:&quot; XML
+  namespace. Only valid for MM7/SOAP, and is used in the SOAP message
+  to identify the namespace for all MM7/SOAP specific elements. Default value is <i>http://www.3gpp.org/ftp/Specs/archive/23_series/23.140/schema/REL-5-MM7-1-0</i>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>use-mm7-soap-namespace-prefix</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+   Optional. Set to <tt>true</tt> if the MM7/SOAP tags should have the
+  <tt>mm7:</tt> prefix. Some MMC/VAS GW implementations do not seem to
+  like this, so you can set this to false to see what mileage you get.
+  </td>
+ </tr>
+
+
+
+ <tr>
+  <td  valign=top >
+  <tt>short-codes</tt>
+  </td>
+  <td  valign=top >
+  Number
+  </td>
+  <td  valign=top >
+  Semi-colon separated list of short numbers for this VASP: Messages
+  received by Mbuni to any of these numbers are routed to the VASP via MM7.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>vasp-url</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+    Outgoing messages to the VASP are sent via this URL (using HTTP POST)
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>vasp-username</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Incoming HTTP authentication: The username used by the VASP to
+  authenticate itself to Mbuni when sending data
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>vasp-password</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Incoming HTTP authentication: The password used by the VASP to
+  authenticate itself to Mbuni when sending data
+  to the VASP
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mms-to-email-handler</tt>
+  </td>
+  <td  valign=top >
+Boolean
+  </td>
+  <td  valign=top >
+  Set this to <tt>true</tt> if all MMS destined to email addresses should be
+  routed via this VASP by the MMC. The message will be packed as an
+  MM7 message and handed over. This could be used to customise the
+  appearance of the email.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mms-to-local-copy-handler</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+  Set this to <tt>true</tt> if all MMS destined to local recipients
+  (e.g. mobiles) should be copied to this VASP. This is useful if you
+  want to implement a web-based viewer (as a backup solution) for your
+  users. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>send-uaprof</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Optional. This parameter determines whether the User Agent string is
+  sent to the VASP (for MM7/SOAP only, as part of
+  <tt>UACapabilities</tt> entity). Set to <tt>ua</tt> to send the
+  full client User Agent string (i.e. the value of the HTTP request
+  header <tt>User-Agent</tt>). Set to <tt>url</tt> to send the client
+  Profile URL (i.e. the value of the <tt>X-WAP-Profile</tt> HTTP
+  request header). Leave empty not to send any info. Note that this
+  field is only sent in MO transactions (e.g. message delivery,
+  delivery reports).
+  </td>
+ </tr>
+
+</table>
+
+
+Note that currently only HTTP Basic Authentication Scheme is supported
+by Mbuni (for both incoming and out-going requests).
+
+
+<a name="mm4"></a>
+<h5>MM4 Configuration</h5>
+
+<!-- Foreign MMSC stuff -->
+
+<p >Foreign MMS
+Gateways are configured using one or more <i>mmsproxy</i> groups:</p>
+
+<br>
+<tt>
+group =
+mmsproxy<br>
+
+name =
+&quot;A test mms proxy&quot;<br>
+
+host =
+test.com<br>
+
+allowed-prefix
+= &quot;075&quot;<br>
+
+denied-prefix
+= &quot;077&quot;<br>
+
+<br>
+</tt>
+
+<br>
+
+<table border=0 cellspacing=2 cellpadding=2 >
+ <tr>
+  <td  valign=top >
+  <b>Variable</b>
+  </td>
+  <td  valign=top >
+  <b>Type</b>
+  </td>
+  <td  valign=top >
+  <b>Description</b>
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>group</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+  <tt>mmsproxy</tt>
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>name</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  User friendly
+  name
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>host</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Fully qualified
+  domain name
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>allowed-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  recipient number prefixes that can be delivered via this Proxy
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>denied-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  recipient number prefixes that cannot be delivered via this proxy
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>confirmed-delivery</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+  Specifies whether to use request MM4 acknowledgement from the
+  recipient MMC for each message. Default is true.
+  </td>
+ </tr>
+
+
+ <tr >
+  <td  valign=top >
+  <tt>send-mail-prog</tt>
+  &nbsp; &nbsp;</td>
+
+
+  <td  valign=top >
+  String
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  Command to use for sending messages (via email)
+  to foreign MMS gateways. This command over-rides, for this proxy,
+  the <a href="#send-mail-prog">global</a> <tt>send-mail-prog</tt> setting, and provides the same variable
+  substitutions. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>strip-prefixes
+
+  &nbsp; &nbsp;</td>
+
+
+  <td  valign=top >
+  Number list
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  A semi-colon (;) separated string of  prefixes that should (if
+  found) be stripped of the phone number <i>prior</i> to number
+  normalisation and message sending, as described below. Only the first prefix that matches
+  will be stripped. 
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>unified-prefix
+
+  &nbsp; &nbsp;</td>
+
+
+  <td  valign=top >
+  Number list
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  A string to
+  unify received phone numbers, so that routing works correctly. Format is that
+  first comes the unified prefix,
+  then all prefixes which are replaced by the unified prefix, separated with
+  comma (','). For example &quot;+256,000256,0;+,000&quot; should
+  ensure correct UG prefixes. If 
+  there are several unified prefixes, separate their rules with semicolon (';')
+  &nbsp; &nbsp;</td>
+ </tr>
+
+
+</table>
+
+<p>
+When an MM destined to an MSISDN cannot be delivered locally, the
+gateway searches the list of Proxies to see if one of them can handle
+the message. If one is found, the message is formatted as MM4 MIME
+(according to 3GPP TS 23.140) and
+sent via SMTP to the proxy. 
+</p>
+
+<a name="mmsvas_conf"></a>
+<h4>MMS VAS Gateway-specific Configuration</h4>
+<p>
+ When Mbuni is used as a VAS Gateway, the configurations in this
+ section are required to ensure smooth functioning of the system. We
+ describe each configuration set in turn.
+
+</p>
+
+<a name="mmsc_vasp"></a>
+<h5>MMSC Connection Configuratiom</h5>
+
+<p>
+  MMSC connections are configured using one or more <i>mmsc</i>
+  groups:
+</p>
+
+<tt>
+group = mmsc<br>
+id = testone<br>
+group-id = mmc1<br>
+mmsc-url = http://mbuni:test@192.168.129.52:8080/eaif<br>
+incoming-username = user<br>
+incoming-password = pass<br>
+incoming-port = 10002<br>
+type = eaif<br>
+</tt>
+
+<br>
+Supported configuration parameters are:
+<br>
+<table border=0 cellspacing=2 cellpadding=2 >
+ <tr>
+  <td  valign=top >
+  <b>Variable</b>
+  </td>
+  <td  valign=top >
+  <b>Type</b>
+  </td>
+  <td  valign=top >
+  <b>Description</b>
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>group</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+  <tt>mmsc</tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>id</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+   Identifying name for this connection (used in logs for instance). For MM7 connections it also used as the VASP ID parameter, when vasp-id is not specified.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>vasp-id</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Optional:
+   For MM7 connections it is used to explicitly set the VASP ID parameter. If left unspecified, the id is used instead. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>group-id</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Optional:
+   Can be used to group different MMCs for purposes of receiving DLRs,
+  etc.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>type</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+   Protocol spoken by this MMSC, one of <tt>soap</tt> for 3GPP MM7
+   SOAP, <tt>eaif</tt> for Nokia EAIF protocol, <tt>http</tt> for
+   special HTTP-based inter-mmsbox message relay (see below), or <tt>custom</tt> for
+  a custom implementation handled by a loadable module (see
+  <tt>mmsc-library</tt> below).<br> For <tt>type = http</tt> the VAS GW
+  will forward the message to the URL provided using HTTP POST, with
+  CGI parameters: <tt>mms</tt> &ndash; the binary mms, <tt>from</tt>
+  &ndash; the sender address, <tt>to</tt> &ndash; the recipient
+  address. This allows fast  inter-mmsbox message exchange. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mm7-version</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   Optional. The MM7 version to use on this interface. (defaults are &quot;5.3.0&quot; for
+  MM7/SOAP, &quot;3.0&quot; for EAIF.) For SOAP, this is
+  used in the MM7Version tag. For EAIF it is
+  reported in the HTTP headers. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mm7-soap-xmlns</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   Optional. The namespace URI for the &quot;mm7:&quot; XML
+  namespace. Only valid for MM7/SOAP, and is used in the SOAP message
+  to identify the namespace for all MM7/SOAP specific elements. Default value is <i>http://www.3gpp.org/ftp/Specs/archive/23_series/23.140/schema/REL-5-MM7-1-0</i>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>use-mm7-soap-namespace-prefix</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+   Optional. Set to <tt>true</tt> if the MM7/SOAP tags should have the
+  <tt>mm7:</tt> prefix. Some MMC/VAS GW implementations do not seem to
+  like this, so you can set this to false to see what mileage you get.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>default-vasid</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   Optional. The default VAS ID for this connection. Only valid for MM7/SOAP.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mmsc-url</tt>
+
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  Mandatory:
+   URL address for  the MMSC. Used for outgoing messages
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>incoming-port</tt>
+
+  </td>
+  <td  valign=top >
+  Number
+  </td>
+  <td  valign=top >
+   Port at which Mbuni listens for incoming messages from MMSC
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>incoming-user</tt>
+
+  </td>
+  <td  valign=top >
+string 
+  </td>
+  <td  valign=top >
+   Username to be used by MMSC to authenticate itself to Mbuni for
+   incoming connections. (Using HTTP basic authentication scheme.)
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>incoming-password</tt>
+
+  </td>
+  <td  valign=top >
+string 
+  </td>
+  <td  valign=top >
+   Password to be used by MMSC to authenticate itself to Mbuni for
+   incoming connections
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>incoming-port-ssl</tt>
+
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+   Specifies whether incoming port is secure (i.e. incoming requests
+   use secure HTTP). Only supported if Mbuni is compiled with SSL support.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>allow-ip</tt>
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses of hosts allowed to use/access the incoming MMS port</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>deny-ip</tt>
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses
+  &nbsp; &nbsp;</td>
+  <td  valign=top >
+  List of IP
+  addresses of hosts <i>not</i> allowed to use/access the incoming
+  MMS port
+  &nbsp; &nbsp;</td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>allowed-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  recipient number prefixes that can be delivered via this MMSC (used
+  for routing out-going messages)
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>denied-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  recipient number prefixes that cannot be delivered via this MMSC
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>allowed-sender-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  sender number prefixes that can use this  MMSC
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>denied-sender-prefix</tt>
+  </td>
+  <td  valign=top >
+  Number list
+  </td>
+  <td  valign=top >
+  List of
+  sender number prefixes that cannot use this  MMSC
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>max-throughput</tt>
+  </td>
+  <td  valign=top >
+  Number
+  </td>
+  <td  valign=top >
+    Maximum number of messages per second (outgoing) that this MMSC
+    can handle.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>reroute</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+  If set to <tt>true</tt> all messages received from this MMSC are
+  routed directly to the outgoing queue (never to an MMS Service). 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>reroute-mmsc-id</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+  If set (and <tt>reroute</tt> is <tt>true</tt>) then all messages
+  received on this connection will be sent out directly via the MMSC
+  with the ID set here.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>reroute-add-sender-to-subject</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+  If <tt>reroute</tt> is <tt>true</tt> and this flag is also true then all messages
+  received on this connection are re-routed, and the original sender
+  is added to the message subject line
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mm7-mt-filter-params</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+    Parameter(s) to be passed to the <tt>init</tt> function of the MT
+  MMS filter module specified in <tt>mmsbox-mt-filter-libary</tt>
+  above. (See
+  <tt>mmsbox_mt_filter.h</tt> for details.) The <tt>init function</tt> is called once for each MMC
+  connection, and must return no error, otherwise no filtering will be
+  done on MT messages via this MMC.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>mmsc-library</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   If MMC type is <tt>custom</tt>, this parameter provides the dynamic
+  shared object (DSO) library to be loaded to provide connectivity to
+  the MMC. (See <tt>mmsbox_mmsc.h</tt> for details on required
+  exported symbols.) 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>custom-settings</tt>
+  </td>
+  <td  valign=top >
+  String
+  </td>
+  <td  valign=top >
+   If MMC type is <tt>custom</tt>, this parameter provides settings to
+  be provided to the  dynamic
+  shared object (DSO) library loaded to provide connectivity to
+  the MMC. (See <tt>mmsbox_mmsc.h</tt> for details on how this is used.) 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>no-sender-address</tt>
+  </td>
+  <td  valign=top >
+  Boolean
+  </td>
+  <td  valign=top >
+  If set to <tt>true</tt> Mbuni will not set
+  the <tt>SenderAddress</tt> tag in the SOAP Message Submit XML packet
+  </td>
+ </tr>
+
+</table>
+
+
+<a name="sendmms"></a>
+<h5>SendMMS User Configuration</h5>
+
+<p>
+ To be able to send MMS into Mbuni via the sendMMS port (if
+ configured), at least one sendmms user must be configured:
+</p>
+
+<tt>
+
+group = send-mms-user<br>
+username = tester<br>
+password = foobar<br>
+faked-sender = 100<br>
+</tt>
+<p>
+ Configuration parameters are:
+
+<table border=0 cellspacing=2 cellpadding=2 >
+ <tr>
+  <td  valign=top >
+  <b>Variable</b>
+  </td>
+  <td  valign=top >
+  <b>Type</b>
+  </td>
+  <td  valign=top >
+  <b>Description</b>
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>group</tt>
+  </td>
+  <td  valign=top >
+  mandatory
+  </td>
+  <td  valign=top >
+  <tt>send-mms-user</tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>username</tt>
+  </td>
+  <td  valign=top >
+  mandatory
+  </td>
+  <td  valign=top >
+   Username
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>password</tt>
+  </td>
+  <td  valign=top >
+  mandatory
+  </td>
+  <td  valign=top >
+   Password
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>faked-sender</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+   Optional sender address used (irrespective of whether from address
+   has been specified in MMS send request).
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>delivery-report-url</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+   Optional URL to call to send message delivery status as reported to
+   the VAS gateway by a MMSC for a message submitted by this user.
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>read-report-url</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+   Optional URL to call to send message read status reports as returned to
+   the VAS gateway by a MMSC for a message submitted by this user.
+  </td>
+ </tr>
+
+ <tr>
+  <td valign=top >
+  <tt>mmsc</tt>
+  </td>
+  <td valign=top>
+  string
+  </td>
+  <td valign=top>
+   Optional id of the mmsc to use, if none is specified using the CGI Variables
+  </td>
+ </tr>
+</table>
+
+</p>
+
+<p>
+  The Send MMS service can be invoked using HTTP GET or POST requests to the
+  Send MMS port on the VAS Gateway hosts. The interface expects and
+  processes the following CGI paramerters:
+</p>
+<p>
+<table border=0 cellspacing=2 cellpadding=2 >
+
+ <tr>
+  <td  valign=top nowrap>
+    <b>CGI Variable&nbsp;</b>
+  </td>
+  <td  valign=top >
+    <b>Description</b>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>username</tt>
+  </td>
+  <td  valign=top >
+  authentication username (must match a configured send-mms-user).
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>password</tt>
+  </td>
+  <td  valign=top >
+  authentication password (must match password of corresponding send-mms-user).
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>from</tt>
+  </td>
+  <td  valign=top >
+   Message sender. This is over-ridden by <tt>faked-sender</tt>
+   setting of the send-mms-user.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>to</tt>
+  </td>
+  <td  valign=top >
+  Message recipient(s). Multiple recipients can be separated with a whitespace.
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+    <tt>subject</tt>
+  </td>
+  <td  valign=top >
+   Message subject
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+    <tt>mmsc</tt>
+  </td>
+  <td  valign=top >
+    Outgoing MMSC via which to route the message. If this is not
+    given, the VAS Gateway routes the message based on the recipient
+    address and the <tt>allowed-prefix</tt>/<tt>denied-prefix</tt>
+    settings for the configured MMSCs. <i>Note: The VAS Gateway
+    considers that any MMSC can handle email and IP address recipient
+    addresses and so routes messages to such destinations to the first
+    configured MMSC. Note too that MT MMS filtering will not be
+  done on messages sent via the send-mms interface unless a particular
+  destination MMC is specified using this variable</i>
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+    <tt>dlr-url</tt>
+  </td>
+  <td  valign=top >
+  URL to invoke when a delivery report for this message is received
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+    <tt>rr-url</tt>
+  </td>
+  <td  valign=top >
+   URL to invoke when a read report for this message is received
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>text</tt>
+  </td>
+  <td  valign=top >
+  If provided, this is used as the (text) content of the MM to be
+  sent. The content type of the MM is set to <tt>text/plain</tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>charset</tt>
+  </td>
+  <td  valign=top >
+  Used in conjuction with the <tt>text</tt> parameter, it specifies
+  the character set of the text, if it is not the default (iso-8859-1).
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+    <tt>smil</tt>
+  </td>
+  <td  valign=top >
+  If provided, specifies the SMIL for the MM. An MM is built out of
+  the SMIL as described <a href="#how_content">below</a>, and the MM body
+  will have content type <tt>multipart/related</tt>, which is the
+  expected default.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>content-url</tt>
+  </td>
+  <td  valign=top >
+  If provided, specifies the URL of the content to be sent.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>content</tt>
+  </td>
+  <td  valign=top >
+  If provided, specifies the arbitrary content for the MM. The Content type of
+  the content is determined either by the <tt>content_type</tt> CGI
+  variable (see below), or if <i>enctype=multipart/form-data</i> is
+  used in the HTTP POST request, then the content type associated with
+  this variable data is used.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>content_type</tt>
+  </td>
+  <td  valign=top >
+  If the <tt>content</tt> variable is  provided, this variable
+  specifies the content type of the <tt>content</tt>. The default, if
+  no content type is provided (or can be gleaned from the HTTP
+  request), this is set to <i>application/octet-stream</i>.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>base-url</tt>
+  </td>
+  <td  valign=top >
+   If the <tt>smil</tt> URL parameter is provided, then this
+   parameter may be supplied to be used as the base URL for resolving
+   all relative URLs specified within the SMIL file while building the
+   MM. Default: <tt><i>http://localhost/</i></tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>vasid</tt>
+  </td>
+  <td  valign=top >
+  This will be passed on the MMC as the VASID parameter in the
+  MM7/SOAP message. If not provided, defaults to <tt>sendmms-user</tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>servicecode</tt>
+  </td>
+  <td  valign=top >
+  This will be passed on the MMC as the ServiceCode parameter in the
+  MM7/SOAP message. If not provided, this parameter is not sent.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>allow-adaptations</tt>
+  </td>
+  <td  valign=top>
+  Should be 1 (yes) or 0 (no). This flag will be passed on to the
+  operator MMSC (MM7/SOAP only) to turn on/off content adapation.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>mclass</tt>
+  </td>
+  <td  valign=top>
+ Message Class. (e.g. Personal) 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>priority</tt>
+  </td>
+  <td  valign=top>
+ Message Priority. (e.g. Normal) 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>mms-direction</tt>
+  </td>
+  <td  valign=top>
+   MT (mobile terminating) or MO (mobile orginating). When set to MO,
+  the MMS is queued as if it came from the 
+  operator MMSC side. This is useful for testing service
+  configurations as it mimics receiving an MO MMS. Default is MT.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>distribution</tt>
+  </td>
+  <td  valign=top>
+  Optional. Should be <tt>true</tt> or <tt>false</tt>. This is set as the
+  MM7/SOAP <tt>DistributionIndicator</tt> parameter.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>validityperiod</tt>
+  </td>
+  <td  valign=top>
+  Optional. Should be an integer, giving the number of minutes before
+  this message is considered expired by the receiving MMSC.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>charged-party</tt>
+  </td>
+  <td  valign=top>
+  Optional. Set to the MM7/SOAP <tt>ChargedParty</tt> parameter.
+  </td>
+ </tr>
+
+</table>
+  
+</p>
+
+<p>
+ <b>Note: </b> Only one
+ of <tt>text</tt>, <tt>smil</tt>, <tt>content-url</tt> or
+ <tt>content</tt> should be speficied, as only one makes sense at any time. Specifying more than one causes others
+ to be (silently) ignored. 
+</p>
+
+<p>
+
+If a <tt>delivery-report-url</tt> or <tt>read-report-url</tt> is
+specified for the send mms user (or as parameters in the send mms
+request), and a report is sent to the VAS
+Gateway by a MMSC, the relevant URL is called (using the HTTP GET
+method), and information about the report sent to it via <a
+							    href="#x_mbuni_headers"><tt><i>X-Mbuni</i></tt>
+    headers</a>.
+</p>
+
+<p>
+ The SendMMS interface can also be used to send binary content
+ (e.g. binary-coded MMS, image or audio)
+ directly to Mbuni. This is done as follows:
+<ul>
+<li>Send the binary content as the body of an HTTP POST request to the
+  SendMMS port. Be sure to specify the correct body content type as part of
+  the HTTP request headers. This is interpreted according to the rules
+  set out <a href="#how_content">below</a>.
+<li>Supply to the request URL all but the <tt>text</tt> and <tt>smil</tt>  URL
+  parameters (as described above) as part of the request URL.
+</ul> 
+</p>
+<a name="mms_service"></a>
+<h5>MMS Service Configuration</h5>
+
+<p>
+ Messages are routed to services based on the first word of the text
+ part of the MM. That is, Mbuni extracts the first text part of the
+ MM, and finds the first word &mdash; the keyword &mdash; in the
+ message. Mbuni then searches through the list of
+ configured MMS Services for a matching service based on the
+ keyword, and fetches the response from the  associated URL, file or
+ program. 
+</p>
+
+<p>
+ A sample service configuration might look like this:<br>
+
+<tt>
+group = mms-service<br>
+name = me<br>
+post-url = http://localhost/photoblog.php<br>
+catch-all = true<br>
+http-post-parameters = fx=true&amp;images[]=%i&amp;text[]=%t<br>
+accept-x-mbuni-headers = true<br>
+keyword = test<br>
+</tt>
+
+<br>
+A detailed list of configuration parameters for MMS Services is given below.
+</p>
+
+
+<p>
+
+<table border=0 cellspacing=2 cellpadding=2 >
+ <tr>
+  <td  valign=top >
+  <b>Variable</b>
+  </td>
+  <td  valign=top >
+  <b>Type</b>
+  </td>
+  <td  valign=top >
+  <b>Description</b>
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>group</tt>
+  </td>
+  <td  valign=top >
+  mandatory
+  </td>
+  <td  valign=top >
+  <tt>mms-service</tt>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>name</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+   Service name. Used for logging, also sent to MMSC as VAS ID
+   parameter for MM7 SOAP requests
+  </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+  <tt>keyword</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    mandatory keyword. Incoming messages whose text part matching this
+    parameter will be routed via this service.
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>aliases</tt>
+  </td>
+  <td  valign=top >
+  list of string
+  </td>
+  <td  valign=top >
+   semi-colon separated list of keyword aliases. Any of these keywords
+   will also match and cause message to be routed via the service.
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>catch-all</tt>
+  </td>
+  <td  valign=top >
+  boolean
+  </td>
+  <td  valign=top >
+  Set this to <tt>true</tt> if this is the default service (i.e. all
+  other messages routed through this service in case of no match).
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+  <tt>accepted-mmscs</tt>
+  </td>
+  <td  valign=top >
+  list of strings
+  </td>
+  <td  valign=top >
+    semi-colon separated list of MMSCs (listed by ID). Only messages
+    from these MMSCs will be routed to this service on match. Leave
+    this empty to allow all.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>denied-mmscs</tt>
+  </td>
+  <td  valign=top >
+  list of strings
+  </td>
+  <td  valign=top >
+     Messages
+    from these MMSCs will <i>never</i> be routed to this service on match. Leave
+    this empty to allow all.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>allowed-receiver-prefix</tt>
+  </td>
+  <td  valign=top >
+   Strings
+  </td>
+  <td  valign=top >
+  Semicolon-separated strings: List of receiver short code prefixes
+  allowed to use
+  this MMS Service.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>denied-receiver-prefix</tt>
+  </td>
+  <td  valign=top >
+Strings
+  </td>
+  <td  valign=top >
+  Semicolon-separated strings: List of receiver short code prefixes not
+  allowed to use
+  this MMS Service.
+
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>get-url</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+  The URL to fetch for response content. No parameter substitution is
+  done, but <i>X-Mbuni</i> headers are sent as part of the HTTP request. See
+  <a href="#how_content">below</a> for an explanation on how the
+  response content is interpreted. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>exec</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    Program to execute to obtain response content. Response is
+    exptected on standard output, and <b><i>must</i></b> be of type
+    SMIL. See <a href="#how_content">below</a> for an explanation on how
+    the SMIL is processed. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>file</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    File from which to obtain response content. Response type is
+    inferred from the file name extension for a few well-known media
+    types (text, SMIL, GIF, JPEG, PNG, BMP/WBMP, WAV, AMR, MP3, etc.),
+    otherwise it defaults to <tt>application/octet-stream</tt>. See <a
+    href="#how_content">below</a> for further information on how
+    fetched content is converted to an MM. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>text</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    If provided, the response content is the value of this parameter,
+    and is assumed to be of media type <tt>text/plain</tt>.
+  </td>
+ </tr>
+
+
+  <tr>
+  <td  valign=top >
+  <tt>post-url</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    Response content is obtained as result of sending a HTTP POST
+    request to the provided URL. The POST message is <i>always</i>
+    submitted using the
+    <tt>multipart/form-data</tt> encoding (such as that used by a web  browser
+    when an HTML form has the <tt>enctype=multipart/form-data</tt>
+    parameter set). If <tt>http-post-parameters</tt> field is given
+    (see 
+    below), then the relevant parameters are sent as part of the
+    request. <i>X-Mbuni</i> headers are sent as well. See
+  <a href="#how_content">below</a> for an explanation on how the
+  response content is interpreted. 
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>http-post-parameters</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    Used in conjunction with <tt>post-url</tt>. Parameters are
+    provided in the same way as would be provided in an HTTP GET
+    request (e.g. <i>message=true&amp;myname=test&amp;image=%i</i>). 
+    Parameter values that begin with % are interpolated according to
+    the rules listed <a href="#post_params">below</a>.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>accept-x-mbuni-headers</tt>
+  </td>
+  <td  valign=top >
+  boolean
+  </td>
+  <td  valign=top >
+    Set this to true if Mbuni should honour <i>X-Mbuni</i> HTTP
+    headers in the service response. See <a
+    href="#x_mbuni_headers">below</a> for the list of headers.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>pass-thro-headers</tt>
+  </td>
+  <td  valign=top >
+  List
+  </td>
+  <td  valign=top >
+    Set this to a comma-separated list of HTTP response headers that, if received from
+    the service response, should be passed to the MMC  (with their
+    corresponding values) unchanged. Note
+    that these headers are merged with other headers generated by Mbuni.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>omit-empty</tt>
+  </td>
+  <td  valign=top >
+  boolean
+  </td>
+  <td  valign=top >
+    Set this to true if Mbuni should send an empty response to the
+    requestor if one is returned by the service
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>suppress-reply</tt>
+  </td>
+  <td  valign=top >
+  boolean
+  </td>
+  <td  valign=top >
+    Set this to true if Mbuni not send a reply back to the user of
+    this service. Note that the request URL will still be invoked.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>assume-plain-text</tt>
+  </td>
+  <td  valign=top >
+  boolean
+  </td>
+  <td  valign=top >
+  Set this to true if an unknown content type in the response should
+  be mapped to plain text.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>faked-sender</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    If set, Mbuni will change the sender address in the response
+    message to this value, irrespective of any <i>X-Mbuni</i> headers
+    or the original recipient address.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+  <tt>service-code</tt>
+  </td>
+  <td  valign=top >
+  string
+  </td>
+  <td  valign=top >
+    If set, Mbuni will use this as the <b>ServiceCode</b> parameter to
+    send back the MMSC (MM7/SOAP only) in a <b>SubmitReq</b> packet. This
+    paramter overrides the  <i>X-Mbuni-ServiceCode</i> header, if set
+    int the response.
+  </td>
+ </tr>
+
+</table>
+<br>
+ Note that only one
+ of <tt>get-url</tt>, <tt>post-url</tt>, <tt>file</tt>
+ or <tt>text</tt> may be specified.
+</p>
+
+<br>
+<a name="how_content"></a>
+<b>How Response Content Is Interpreted</b>
+
+<p>
+  When the MMS Service response content is fetched for a service, or a message is
+  pushed using the send-mms interface, it is converted into an MM based on the reported or
+  inferred (in the case of <tt>file</tt> content) response content
+  type. For content fetched from URLs, the content type is taken as
+  received from the HTTP server. For <tt>file</tt> content it is
+  inferred from the file extension. For <tt>exec</tt> content, it is
+  assumed to be SMIL. 
+
+ General conversion rules are as follows:<br>
+
+ <ul>
+  <li><b>SMIL:</b> If the content type is <tt>application/smil</tt>,
+  the VAS gateway parses the SMIL and finds all content (e.g. images,
+  audio) it references. (&quot;Referenced&quot; is
+  currently interpreted as any element with an <tt>src</tt>
+  attribute.) These are fetched and added to the
+  response MM, and corresponding SMIL component modified
+  (i.e. the <tt>src</tt> attribute modified) to reference
+  the content within the MM. Note that the VAS gateway is smart enough
+  to understand partial URL or file references
+  (e.g. <tt>images/smile.gif</tt> or <tt>./test.txt</tt>), as well as
+  absolute (e.g. <tt>/images/smile.gif</tt>
+  or <tt>http://somehost/test.txt</tt>) references within the
+  SMIL. It will attempt  to fetch the content relative to the
+  location of the base SMIL content in the case of relative references. To prevent
+  the content from being fetched, you can prepend a backslash to the
+  location value. <br>
+    The resulting MM will be a standard multipart/related message,
+  with the SMIL as the start element.
+  </li> 
+<li><b>MMS Content Type:</b> If the returned content type
+  is <tt>application/vnd.wap.mms-message</tt>, the content is assumed
+  to be a binary-coded MM and will be returned as the response
+  content. 
+</li>
+<li>
+  <b>URL List type:</b> A special Mbuni mime
+  type <tt>application/vnd.mbuni.url-list</tt> has been defined, and
+  files with extension <tt>.urls</tt> are mapped to this content type
+  (if the content type is not provided by the HTTP server or other
+  means). Files of this type should contain a list of URLs
+  (<tt>file://</tt> and <tt>http(s)://</tt> supported), one per
+  line. Mbuni will load each content item from the URL and build an MMS
+  containing the list of data items (<tt>multipart/mixed</tt>). 
+  </li>
+
+<li>
+  <b>Other Content Types:</b> All other content types cause an MM to
+  be built having the corresponding content type. Where the content
+  type is not reported (or is impossible to determine) in the
+  response, if the parameter <tt>assume-plain-text</tt> is set, MIME
+  type <tt>text/plain</tt> is assumed.
+  </li>
+ </ul>
+
+</p>
+
+<br>
+<a name="x_mbuni_headers"></a>
+<b><i>X-Mbuni</i> Headers</b>
+<br><br>
+<p>
+   Mbuni VAS Gateway utilises a number of HTTP extension headers to
+   pass additional MM information to and receive information from the
+   MMS Service. Note that all applicable headers are always sent in
+   the HTTP request, but headers are only honoured in the response if
+   the <tt>accept-x-mbuni-headers</tt> parameter of the service is set
+   to <tt>true</tt>. On the response side, if honoured, the set values
+   over-ride the ones in the request, and are used in the response.
+
+ <br><br>
+ The list of supported headers is listed below:<br><br>
+
+<table border=0 cellspacing=2 cellpadding=2 >
+
+ <tr>
+  <td  valign=top nowrap>
+    <b>Header&nbsp;</b>
+  </td>
+  <td  valign=top >
+    <b>Description</b>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-From</tt>
+  </td>
+  <td  valign=top >
+    MM Sender address (e.g. +25674334444/TYPE=PLMN)
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Subject</tt>
+  </td>
+  <td  valign=top >
+    MM Subject
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-To</tt>
+  </td>
+  <td  valign=top >
+    Recipient address. Multiple recipients can be specified as
+    separate headers or as a comma-separated value
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Expiry</tt>
+  </td>
+  <td  valign=top >
+    MM Expiry as an HTTP date.
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-DLR-Url</tt>
+  </td>
+  <td  valign=top >
+    Delivery report URL. This URL will be called with the delivery
+    report status. It is also sent <i>X-Mbuni</i> headers
+  </td>
+ </tr>
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-RR-Url</tt>
+  </td>
+  <td  valign=top >
+   Read Report URL. This URL is called with the read report status. It
+   is sent <i>X-Mbuni</i> headers.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-MMSC</tt>
+  </td>
+  <td  valign=top >
+    MMSC (id) through which message was received (on the request side)
+    or through which it
+    should be routed.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Message-ID</tt>
+  </td>
+  <td  valign=top >
+    MM message ID. Only makes sense on the request side.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Report-Type</tt>
+  </td>
+  <td  valign=top >
+    One of <tt>delivery-report</tt> or <tt>read-report</tt>, used when
+    calling the DLR or RR URL.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-MM-Status</tt>
+  </td>
+  <td  valign=top >
+    Report status. Used in conjuction with <i>X-Mbuni-Report-Type</i>
+    for transmitting report status.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-ServiceCode</tt>
+  </td>
+  <td  valign=top >
+    <b>ServiceCode</b> parameter for MM7/SOAP response packet. If set,
+    its value is sent to the MMSC as the value of the ServiceCode
+    element in the MM7/SOAP message body.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-MessageClass</tt>
+  </td>
+  <td  valign=top >
+    <b>Message Class</b> parameter for message.
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Priority</tt>
+  </td>
+  <td  valign=top >
+   MMS message priority  
+ </td>
+ </tr>
+ 
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-TransactionID</tt>
+  </td>
+  <td  valign=top >
+  This special header is used for transaction tracking. It is included
+  in the MMS service request and uniquely identifies the service
+  request transaction. The transaction ID will be included in the delivery or
+  read report when the DLR URL is called, so that the service side can
+  match the DLR to the service request transaction.
+ </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-UAProf</tt>
+  </td>
+  <td  valign=top >
+  This special header is included in the service request (and DLR URL
+  request) and contains the client User-Agent Profile string as
+  received from the MMC side. (Requires MM7/SOAP v6.x support on the
+  MMC side.)
+ </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Timestamp</tt>
+  </td>
+  <td  valign=top >
+  This special header is included in the service request (and DLR URL
+  request) and contains the client submission time stamp (HTTP
+  date format). This header is only included if the User-Agent Profile
+  string is included. (Requires MM7/SOAP v6.x support on the
+  MMC side.)
+ </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-DistributionIndicator</tt>
+  </td>
+  <td  valign=top >
+
+    Should be set to the <tt>DistributionIndicator</tt> value to be
+    passed to the MMSC in the MM7/SOAP message submission.
+ </td>
+ </tr>
+
+
+ <tr>
+  <td  valign=top >
+    <tt>X-Mbuni-Charged-Party</tt>
+  </td>
+  <td  valign=top >
+
+    Should be set to the <tt>ChargedParty</tt> value to be
+    passed to the MMSC in the MM7/SOAP message submission.
+ </td>
+ </tr>
+
+</table>
+</p>
+
+<br>
+
+<a name="post_params"></a>
+<b>HTTP POST Parameters</b>
+<br>
+<p>
+  When a <tt>post-url</tt> is used, you may specify the GCI parameters
+  to be sent in the POST transaction, using % escaepe codes as
+  interpolation markers. The list of supported escape codes is listed
+  below:<br>
+
+<table border=0 cellspacing=2 cellpadding=2 >
+
+ <tr>
+  <td  valign=top nowrap>
+    <b>Escape Code&nbsp;</b>
+  </td>
+  <td  valign=top >
+    <b>Description</b>
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%k</tt>
+  </td>
+  <td  valign=top >
+    Keyword
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%i</tt>
+  </td>
+  <td  valign=top >
+    Image part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%v</tt>
+  </td>
+  <td  valign=top >
+    Video part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%t</tt>
+  </td>
+  <td  valign=top >
+    Text part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%s</tt>
+  </td>
+  <td  valign=top >
+    SMIL part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%a</tt>
+  </td>
+  <td  valign=top >
+    Audio part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%b</tt>
+  </td>
+  <td  valign=top >
+    Entire, binary coded MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%z</tt>
+  </td>
+  <td  valign=top >
+    All part(s) of the MM
+  </td>
+ </tr>
+
+ <tr>
+  <td  valign=top >
+    <tt>%o</tt>
+  </td>
+  <td  valign=top >
+    Other part(s) of the MM (not text, video, audio, smil, or audio)
+  </td>
+
+ <tr>
+  <td  valign=top >
+    <tt>%%</tt>
+  </td>
+  <td  valign=top >
+   Interpolated as %.
+  </td>
+
+ </tr>
+
+</table><br><br>
+
+ Note that the parameter name/value is repeated as many times in the
+ POST data as there are matching parts in the message. That is, if
+ there are three images in the MM and <tt>http-post-parameters</tt>
+ is <i>image=%i</i> then the parameter <i>image</i> will be passed
+ thrice, with different values. (The CGI script used must therefore
+ be prepared to handle multiple parameters with the same name.) <br><br>
+
+ Because <tt>multipart/form-data</tt> encoding is used in the HTTP
+ POST transaction, the content type of each element, as well as its
+ name (if present in the MM) are sent to the service URL. 
+
+ <br><br>
+
+ All other URL parameter name/value pairs are passed to the service
+ URL as-is.
+</p>
+<br>
+
+<H3><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.4"></A><!--TableOfContentsAnchor:End-->Chapter 4: Gateway Architecture</H3>
+
+<p>
+ In this section we provide an overview of the gateway architecture.
+
+<br>
+
+<a name="mmsc_arch"></a>
+<h4>MMSC Architecture</h4>
+
+As indicated, there are three components of the MMSC: The Relay
+(<tt>mmsrelay</tt>), the Proxy
+(<tt>mmsproxy</tt>) and SMTP/Email Interface (<tt>mmsfromemail</tt>). We describe the
+function of each of these in turn. 
+</p>
+
+<H5><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.4.1"></A><!--TableOfContentsAnchor:End-->MMS Proxy</H5>
+
+<p>
+
+This component (<tt>mmsproxy</tt>) is the main point of interaction between the
+gateway and MMS clients and VASPs. It provides an HTTP interface through which
+clients can send MMS messages. From clients,  message types expected on this
+interface are typically: 
+<ul>
+<li>	Send Request: Used by client to submit an MM to the
+gateway. When received, the message is placed in the global queue. If
+the client has requested that a copy by saved to the MMbox, this is done.
+<li>	Forward Request: Used by the client to request the MM to
+forward an MM. In this case the MM is resident on the gateway
+(e.g. pending fetch by client) and is identified by its URL. The
+message is retrieved and placed in the global queue for processing. If
+a request to place a copy in the MMbox is indicated, this is done.
+<li>	Notify Response: Is sent by client as a response to an MM
+notification via Wap Push. This message indicates status information
+such as whether the client wishes to defer fetching of the message,
+etc. If the notification indicates that the message has been fetched,
+the message is removed from the queue. If the notification indicates
+that retrieval has been deferred, the message is marked so that no
+further notifications are sent to the client about this message. 
+<li>	Read receipt: If requested by the sender, a read receipt can
+be forwarded via this interface. This is queued for delivery to the
+recipient 
+<li> MMbox Upload/Delete/Search: Upload and deletion to/from the user
+MMbox are supported.
+<li> MMbox search: A message search request when received is
+processed. The proxy takes care to return only as much data as the
+client can handle (as indicated by UA profile).
+</ul>
+All the above messages are sent to the proxy as the body of an HTTP POST request. 
+Messages are retrieved by supplying the message URL in an HTTP GET
+request. When such a request is received, the proxy:
+
+<ol>
+
+<li>	Locates the message: From the URL, the proxy can tell if this
+is a message in the MMbox or in the in the queue for client-destined messages.
+<li>	Extracts the User Agent Profile URL from the (HTTP) request
+headers. If that is missing, the profile information is built out of
+the HTTP Accept headers. The profile URL is passed to the content
+adaptation module, which performs various modifications to the MM such
+as: 
+<ul>
+<li>	Converting images in the MM to a format supported by the client
+<li>	Scaling images to fit the screen size of the client
+<li>	Converting audio in the MM to a format supported by the client
+<li>	Converting text to a supported character set
+<li>	Removing unsupported content from the MM
+</ul>
+note that profile data is cached 
+(in <tt><i>storage-directory</i>/UserAgent_Profiles</tt>) so as not to have to fetch it each time. 
+<li>	The message is then packed and returned to the client as the 
+result of the HTTP request.
+
+</ol>
+
+<p>
+Currently, no MMbox quotas are imposed. 
+</p>
+
+
+From VASPs mmsproxy expects and processes:
+<ul>
+<li>Send Requests: Used to submit messages for onward transmission by
+Mbuni
+<li> Cancellations: A previously submitted message can be cancelled if
+it hasn't yet been routed to the next processor or receiver. (That is,
+only messages still in the global queue can be cancelled.) Only the
+original submitted can cancel a message.
+<li>Replacement: A submitted message can be changed &mdash; the VASP may
+				supply different content, which will
+				then replace any content currently in
+				th queue.
+</ul>
+<br>
+Both SOAP and EAIF MM7 requests are supported.
+
+<br>
+This component must always be running.
+
+</p>
+
+<H5><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.4.2"></A><!--TableOfContentsAnchor:End-->MMS Relay</H5>
+
+ The Relay manages routing of all messages (to phone, email, VASP). 
+<p>
+ The Relay watches the global queue for incoming messages (from VASP,
+ external MMSCs or clients). For each message that arrives
+in the queue, the relay: 
+<ol>
+<li>	Determines if the message is due for delivery attempt. An
+attempt is made to deliver the message as soon as it is received
+ (deffered delivery requests are honoured however), with
+exponential back-off in case of failure. 
+<li>	At the first delivery attempt, a call is made to the billing
+module to effect billing and CDR generation. If the billing module
+indicates that the sender does not have sufficient credit, the message
+is discarded and the sender notified via delivery report. 
+<li>	If the message is due for delivery attempt, the global sender
+determines, for each recipient, how to deliver the message: 
+<ol type="a">
+<li>	If the message is destined for an email user, the message is
+re-formatted as MIME, sender and recipient addresses normalised as RFC
+822 addresses, and the message passed to the mailer. 
+<li>If the the message is destined for a VASP (identified by short
+code), then it is sent using MM7 protocols to the relevant VASP.
+<li>	If the message is destined for a local MMS client, the message
+is transferred to the mobile/local queue. A copy of the message is
+sent (as MIME) to the MMBox host (if one is configured) 
+<li>	If the message is destined for a foreign gateway, it is coded
+as MIME and passed to the mailer for delivery via SMTP 
+<li>	If the message cannot be delivered, the sender is notified.
+</ol>
+</ol> 
+</p>
+
+<p>
+
+For messages placed in the mobile/local queue (i.e. those destined to
+MSISDNs in the area served by this MMSC or IP-based clients), the
+relay performs the following functions: 
+<ol>
+<li>	Notification is sent to the recipient client  via WAP Push
+<li>	Delivery of other notifications such as delivery and read
+reports to clients via WAP Push 
+</ol>
+SMS is used as the transport for WAP Push messages, if the recipient
+is an MSISDN, otherwise UDP is used.
+<br>
+The Relay maintains a separate queue for messages pending delivery. At
+set intervals (see configuration section), it sends notifications to
+the recipient. It keeps sending notifications until the message is
+fetched or the client indicates that it wishes to defer message
+retrieval. A back-off mechanism is utilised to prevent flooding of
+notifications. 
+ A message will be removed from the queue if:
+<ul>
+<li>	It expires, either due to expiry period set within the message
+being reached or system wide expiry time is reached. (The sender is
+notified of expiry if they requested a delivery report) 
+<li>	If the recipient retrieves the message
+</ul>
+
+</p>
+
+<p>
+<br>
+A word about queue management: A simple queue management scheme is
+used. Each queue entry consists of two files: The 'q' file (which is
+plain text) contains the entry control data
+(list of recipients, next delivery attempt time, etc), the 'd' file
+contains the message data. This scheme is similar to that used by
+popular MTAs.  Queue processors mostly operate on the 'q' file, and
+use file locking to guard against duplicate delivery, file corruption,
+etc. 
+<br>
+See <tt>mms_queue.h</tt> for details. 
+
+</p>
+
+<p>
+<H5><!--TableOfContentsAnchor:Begin--><A NAME="Section_.1.4.4"></A><!--TableOfContentsAnchor:End-->SMTP/Mail Interface</H5>
+
+The SMTP/Mail interface receives MMS from the MTA and routes them
+depending on recipient or sending proxy. Specifically:
+<ol>
+<li>	If the
+message is a send request, it is queued to the global queue for
+delivery as long as the recipient is permitted via the interface (see
+configs)
+<li>	If the message is a notification (e.g. delivery
+report), the interface carries out the necessary action
+(e.g. forwarding of receipt or deletion of message from local
+queue)
+</ol>
+<br>
+
+This interface should be invoked from your MTA as follows:<br><br>
+<tt>
+
+mmsfromemail -f <i>from_address</i> -t <i>recipient_address</i> 
+-s <i>sender_mmsc_hostname</i>  <i>[-x]</i> <i>[-n]</i> <i>conf_file</i>
+</tt>
+<br/>
+<br>
+The <i>-n</i> flag may be used to prevent stripping of the host/domain
+part from the sender address. The <i>-x</i> flag causes the sender
+address to be stripped of the <tt>TYPE=PLMN</tt> part.
+<br>
+Note that no IP-based security is provided at this
+interface. It is expected that security measures (e.g. firewalls, etc) 
+will have been setup to ensure that messages can only reach the MTA
+and be handed over to this interface if they are legitimate.
+</p>
+
+<p>
+<H5><!--TableOfContentsAnchor:Begin--><A
+NAME="Section_.1.4.5"></A><!--TableOfContentsAnchor:End-->Utilities</H5>
+
+ We plan to add a number of utilities to the gateway.  The first of
+ these is <tt>mmssend</tt>.
+<br>
+ <br>
+<tt>mmsssend</tt> can be used to submit (inject) a message into the
+ global queue. It should be invoked as follows:<br>
+<br>
+<tt>
+
+mmssend -f <i>from_address</i> -t <i>recipient_list</i> -m
+<i>mmsfile</i> [-b] <i>conf_file</i>
+</tt>
+<br><br>
+Notes:
+<ul>
+<li>the recipient list can be a colon-separated list of multiple
+recipients
+<li>The MMS file may  be binary coded, or MIME. The utility tries to
+guess which by inspecting the first byte of the file.
+<li>From/To addresses are only used for delivery purposes (so internal
+message headers may not be updated
+<li>The <tt>-b</tt> flag, if specified, causes a copy of the message
+to be saved in the sender's MMbox. (No check is made to confirm that
+sender address is local!)
+</ul>
+The message is placed in he global queue with expiry set to the system
+maximum, and the queue entry ID is printed to standard output.
+</p>
+<p>
+
+<a name="vas_arch"></a>
+<H4>VAS Gateway Architecture</H4>
+
+<p>
+ The VAS gateway consists of a single multi-threaded
+ program <tt>mmsbox</tt>. This program performs a number of
+ simultaneous functions, including receiving incoming MM from MMSCs,
+ dispatching requests to services, composing and sending responses,
+ and listening for and handling sendmms requests.  The key modules of
+ the engine are described below.
+
+</p>
+
+<p>
+ The VAS gateway maintains two main message queues: One for incoming
+ messages (received from MMSCs), one for outgoing messages (received
+ from services or the send-mms port). These are maintained in
+ the <tt><i>storage-directory</i></tt> directory, in
+ directories <tt>mmsbox_incoming</tt> and <tt>mmsbox_outgoing</tt>
+ respectively. Queue structure is the same as that used by the MMSC component.
+
+ <br> A separate directory (<tt>mmsbox_dlr</tt>) is maintained for storing DLR URLs.
+
+</p>
+
+<ul>
+<li><b>SendMMS Module:</b> This module listens on
+  the <tt>send-mms-port</tt> for incoming requests. These are
+  received and turned into MM as described <a
+  href="#how_content">above</a> and written to the outgoing
+  queue. If the
+  sender requested a read or delivery report (by specifying the
+  requisite URL), the relevant URL is
+  stored to the DLR URL store for future use. On success, the
+  interface returns the message submission transaction ID (which is
+  also reported with an DLR). </li>
+<li><b>MMSC handler module:</b> Receives messages coming from MMSCs,
+  and saves them to the incoming queue. Also watches the outgoing
+  message queue for new messages, which it dispatches to the relevant
+  MMSC based on recipient number routing (if the destination MMSC was
+  not set)</li>
+<li><b>Service Dispatch:</b> Reads messages from the incoming queue,
+  determines which service to invoke, receives the result and creates
+  a response MM, which is written to the outgoing queue. If the
+  service requested a read or delivery report, the relevant URL is
+  stored to the DLR URL store for future use.</li>
+</ul>
+
+<H3><!--TableOfContentsAnchor:Begin--><A
+NAME="Section_.1.5"></A><!--TableOfContentsAnchor:End-->Chapter 5: Tips & Tricks</H3>
+
+ This section is a compilation of tips and tricks on making Mbuni work
+ better for you 
+
+<H4><!--TableOfContentsAnchor:Begin--><A
+ NAME="Section_.1.5.1"></A><!--TableOfContentsAnchor:End-->Passing
+ MSISDNs to Mbuni MMSC</H4>
+ As indicated earlier, Mbuni expects the MSISDN to be sent to it as a
+ special HTTP request header. There are however times when it is
+ either not possible, or not practical to insert the header into the
+ MMS request. For such cases, Mbuni provides another way to specify
+ the sender MSISDN: The last part of the URL passed in the HTTP
+ transaction is passed to the De-tokenizer module (if specified),
+ which should return a valid sender address. So for instance
+ you can configure a clients to use a URL like <tt>http://mmsc/xYz12R2
+ </tt>
+ as the MMSC address, and Mbuni will pass <tt>xYz12R2</tt> to the
+ de-tokenizer module, which must return the  sender
+ address. Mbuni will only  do this it has failed to find the address request header.
+<br>
+ If no sender address (MSISDN) is found, Mbuni assumes that the MMS client is
+ identified by IP address, and attempts to look up the IP address of
+ the sender (see config section) and use that as the sender
+ address. You can block this by specifying <tt>allow-ip-type = false</tt>
+<br>
+<br>
+ Note that because of the above feature, you need to configure your
+ WAP gateway and Mbuni IP security to ensure the system is not easily
+ spoofed.
+</p>
+
+<h4>Sample Kannel WAP configuration<a name="Section_.1.5.2"></a></h4>
+<p>
+We provide a sample Kannel <tt>wapbox</tt> config below, with some explanation
+<br>
+<tt>
+group = wapbox<br>
+bearerbox-host = localhost<br>
+log-file = "/tmp/wapbox.log"<br>
+syslog-level = none<br>
+access-log = "/tmp/wapaccess.log"<br>
+timer-freq = 10<br>
+map-url = "http://mmsc/* http://localhost:1981/*"<br>
+</tt>
+<br>
+This is a live example that was used in tests. In the example we use:
+<ul>
+<li> <tt>wapbox</tt> URL mapping to convert incoming MMS request URLs
+into the long form. Note that the MMS gateway always sends short form
+URLs so you need something like this
+<li>We increase the <tt>timer-freq</tt> (essentially
+slowing the timer) because over
+slow bearer (such as CSD), the WAP gateway tends timeout on large
+messages. Not sure if it is wise to do this.  Although clearly whoever put this parameter in the config file expected it to be used!
+</ul>
+
+</p>
+
+<H3><!--TableOfContentsAnchor:Begin--><A
+NAME="Section_.1.6"></A><!--TableOfContentsAnchor:End-->Chapter 6: Log Files</H3>
+
+The gateway writes a log file of important actions to the log file
+configured. Message traffic is written to the access log in a standard
+format. 
+<hr>
+<!--  Author: Paul Bagyenda, Digital Solutions --><br>
+
+<!-- when used within site, have #include virtual="footer.html" -->
+
+<!-- begining of footer -->
+</body>
+</html>
+<!-- end of footer -->
+
+
