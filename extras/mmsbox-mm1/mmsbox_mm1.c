@@ -1,12 +1,12 @@
 /*
- * Mbuni - Open  Source MMS Gateway 
- * 
+ * Mbuni - Open  Source MMS Gateway
+ *
  * Mbuni MmsBox MM1 Component - Send & Receive MMS using a GPRS/EDGE/3G modem
- * 
+ *
  * Copyright (C) 2007-2009, Digital Solutions Ltd. - http://www.dsmagic.com
  *
  * Paul Bagyenda <bagyenda@dsmagic.com>
- * 
+ *
  * This program is free software, distributed under the terms of
  * the GNU General Public License, with a few exceptions granted (see LICENSE)
  */
@@ -34,13 +34,13 @@ typedef struct {
 
      Octstr *unified_prefix; /* copies from above, do not edit! */
      List *strip_prefixes;
-     
+
      /* internal data. */
-     MmscGrp *info; 
+     MmscGrp *info;
      MmsQueueHandlerFuncs *qfs;
      List *requests;   /* list of requests. */
      long h_tid, d_tid;         /* thread IDs.  */
-  
+
      int sender_alive;
 } MM1Settings;
 
@@ -55,30 +55,30 @@ typedef struct {
      } u;
      void *result;  /* set to the result for a PUSH */
      Octstr *error;
-} MM1Request; 
+} MM1Request;
 
 static void handle_notify(MM1Settings *mm1);
 static void handle_mm1(MM1Settings *mm1);
-static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,  
-		    Octstr *unified_prefix, List *strip_prefixes, 
+static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
+		    Octstr *unified_prefix, List *strip_prefixes,
 		    void **data)
 {
      Octstr *x, *y;
      List *l;
      Octstr *mmsc_url = NULL;
-     Octstr *proxy = NULL;   
-     Octstr *gprs_on = NULL; 
+     Octstr *proxy = NULL;
+     Octstr *gprs_on = NULL;
      Octstr *gprs_pid = NULL;
-     Octstr *smsc_on = NULL; 
+     Octstr *smsc_on = NULL;
      Octstr *smsc_off = NULL;
-     int  port = 80;     
+     int  port = 80;
      Octstr *interface = NULL;
      Octstr *msisdn = NULL;
-     
+
      MM1Settings *mm1;
-     
+
      /* parse the settings. */
-     
+
      x = octstr_duplicate(mmc->settings);
      l = octstr_split(x, octstr_imm(";"));
      octstr_destroy(x);
@@ -88,7 +88,7 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
 	       Octstr *item = (i>=0) ? octstr_copy(y, 0, i) : NULL;
 	       Octstr *value = (i>=0) ? octstr_copy(y, i+1, octstr_len(y)) : NULL;
 
-	       if (item == NULL) 
+	       if (item == NULL)
 		    octstr_destroy(value);
 	       else if (octstr_str_case_compare(item, "mmsc-url") == 0)
 		    mmsc_url = value;
@@ -101,7 +101,7 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
 	       else if (octstr_str_case_compare(item, "port") == 0) {
 		    port = value ? atoi(octstr_get_cstr(value)) : 80;
 		    if (http_open_port(port, 0) != 0)
-			 mms_warning(0, "mmsbox-mm1",  NULL, "failed to open incoming notifications port %d: %s", 
+			 mms_warning(0, "mmsbox-mm1",  NULL, "failed to open incoming notifications port %d: %s",
 			       port, strerror(errno));
 	       }else if (octstr_str_case_compare(item, "http-interface") == 0)
 		    interface = value;
@@ -113,7 +113,7 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
 		    msisdn = value;
 	       else {
 		    mms_error(0, "mmsbox-mm1", NULL, "unknown/unsupported option: %s", octstr_get_cstr(item));
-		    octstr_destroy(value);	       
+		    octstr_destroy(value);
 	       }
 	       octstr_destroy(item);
 	       octstr_destroy(y);
@@ -124,7 +124,7 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
      }
 
      gwlist_destroy(l, NULL);
-     
+
      mm1 = gw_malloc(sizeof *mm1);
      mm1->mmsc_url = mmsc_url;
      mm1->proxy = proxy;
@@ -135,7 +135,7 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
      mm1->port = port;
      mm1->interface = interface;
      mm1->msisdn = msisdn;
-     
+
      mm1->unified_prefix = unified_prefix;
      mm1->strip_prefixes = strip_prefixes;
 
@@ -158,9 +158,9 @@ static void handle_notify(MM1Settings *mm1)
      Octstr *ip = NULL, *url = NULL;
      Octstr *body = NULL;
      List *cgivars = NULL, *h = NULL;
-     
+
      while ((client = http_accept_request(mm1->port, &ip, &url, &h, &body, &cgivars)) != NULL) {
-	  List *cgivar_ctypes = NULL; 
+	  List *cgivar_ctypes = NULL;
 	  Octstr *text, *rb = NULL, *s = NULL, *loc = NULL;
 	  MmsMsg *m = NULL;
 	  int hdrlen, status = HTTP_ACCEPTED, mtype;
@@ -168,40 +168,40 @@ static void handle_notify(MM1Settings *mm1)
 	  time_t expiryt = -1, deliveryt = -1;
 	  Octstr *from = NULL, *subject = NULL, *otransid = NULL, *mmc_id = NULL;
 	  Octstr *qdir;
-	  
 
-	  
-	  parse_cgivars(h, body, &cgivars, &cgivar_ctypes);	  
+
+
+	  parse_cgivars(h, body, &cgivars, &cgivar_ctypes);
 	  text = http_cgi_variable(cgivars, "text");
 
 	  if (!text) {
 	       rb = octstr_imm("mmsbox-mm1: missing 'text' CGI parameter!");
-	       status = HTTP_NOT_FOUND;	       
+	       status = HTTP_NOT_FOUND;
 	       goto loop;
 	  }
-	  /* now parse the MMS, determine what kind it is, 
-	     queue the fetch request or deal with it directly. 
+	  /* now parse the MMS, determine what kind it is,
+	     queue the fetch request or deal with it directly.
 	  */
 	  hdrlen = octstr_get_char(text, 2);
 	  if ((s = octstr_copy(text, 3 + hdrlen, octstr_len(text))) != NULL)
 	       m = mms_frombinary(s, mm1->msisdn);
-	  else 
+	  else
 	       m = NULL;
-	  
+
 	  if (m == NULL) {
 	       rb = octstr_imm("mmsbox-mm1: mal-formed mms packet on interface!");
 	       status = HTTP_FORBIDDEN;
 	       goto loop;
-	  } else 
+	  } else
 	       mms_msgdump(m, 1);
 
 	  /* rest of this copied largely from EAIF code. */
 	  mh = mms_message_headers(m);
 	  mtype = mms_messagetype(m);
-	  mms_collect_envdata_from_msgheaders(mh, &to, &subject, 
-					      &otransid, &expiryt, &deliveryt, 
+	  mms_collect_envdata_from_msgheaders(mh, &to, &subject,
+					      &otransid, &expiryt, &deliveryt,
 					      DEFAULT_EXPIRE, -1,
-					      octstr_get_cstr(mm1->unified_prefix), 
+					      octstr_get_cstr(mm1->unified_prefix),
 					      mm1->strip_prefixes);
 	  from = http_header_value(mh, octstr_imm("From"));
 
@@ -213,21 +213,21 @@ static void handle_notify(MM1Settings *mm1)
 	  case MMS_MSGTYPE_DELIVERY_IND: /* notification of a delivery. */
 	  case MMS_MSGTYPE_READ_ORIG_IND: /* message read. */
 	       msgid = http_header_value(mh, octstr_imm("Message-ID"));
-	       status_value = http_header_value(mh, 
-						(mtype == MMS_MSGTYPE_DELIVERY_IND) ? 
-						octstr_imm("X-Mms-Status") : 
+	       status_value = http_header_value(mh,
+						(mtype == MMS_MSGTYPE_DELIVERY_IND) ?
+						octstr_imm("X-Mms-Status") :
 						octstr_imm("X-Mms-Read-Status"));
 
 	       rqh = http_create_empty_headers();
-	       
-	       dlr_url = mmsbox_get_report_info(m, mm1->info, mmc_id, 
-						(mtype == MMS_MSGTYPE_DELIVERY_IND) ?  
+
+	       dlr_url = mmsbox_get_report_info(m, mm1->info, mmc_id,
+						(mtype == MMS_MSGTYPE_DELIVERY_IND) ?
 						"delivery-report" : "read-report",
                                                 status_value, rqh, NULL, 0, msgid);
-              
-	       qf = mm1->qfs->mms_queue_add(from, to, NULL, 
+
+	       qf = mm1->qfs->mms_queue_add(from, to, NULL,
 					    mm1->info->id, mmc_id,
-					    0, time(NULL) + default_msgexpiry, m, NULL, 
+					    0, time(NULL) + default_msgexpiry, m, NULL,
 					    NULL, NULL,
 					    dlr_url, NULL,
 					    rqh,
@@ -235,12 +235,12 @@ static void handle_notify(MM1Settings *mm1)
 					    octstr_get_cstr(qdir),
 					    "MM7/MM1-IN",
 					    octstr_imm(MM_NAME));
-	       if (qf)  
+	       if (qf)
 		    /* Log to access log */
-		    mms_log((mtype == MMS_MSGTYPE_DELIVERY_IND) ? "Received DLR" : "Received RR", 
-			    from, to, -1, msgid, status_value, mm1->info->id, 
-			    "MMSBox", octstr_imm("MM1"), NULL);			
-	       else 
+		    mms_log((mtype == MMS_MSGTYPE_DELIVERY_IND) ? "Received DLR" : "Received RR",
+			    from, to, -1, msgid, status_value, mm1->info->id,
+			    "MMSBox", octstr_imm("MM1"), NULL);
+	       else
 		    status = HTTP_INTERNAL_SERVER_ERROR;
 	       octstr_destroy(qf);
 	       octstr_destroy(msgid);
@@ -252,15 +252,15 @@ static void handle_notify(MM1Settings *mm1)
 	  case MMS_MSGTYPE_NOTIFICATION_IND: /* notification of an incoming message. */
 	       if ((loc = http_header_value(mh, octstr_imm("X-Mms-Content-Location"))) != NULL) {
 		    MM1Request *r = gw_malloc(sizeof *r);
-		    
+
 		    memset(r, 0, sizeof *r);
 		    r->type = MM1_GET;
-		    r->u.url = loc;		    
+		    r->u.url = loc;
 		    r->waiter_exists = 0;
 		    loc = NULL;
 
-		    gwlist_produce(mm1->requests, r); 
-	       } else 
+		    gwlist_produce(mm1->requests, r);
+	       } else
 		    rb = octstr_format("mmsbox-mm1: notification with content-location??");
 	       break;
 	  default:
@@ -269,13 +269,13 @@ static void handle_notify(MM1Settings *mm1)
 	       status = HTTP_NOT_FOUND;
 	       break;
 	  }
-	  
-	  
+
+
      loop:
 	  /* send reply. */
 	  http_header_add(rh, "Content-Type", "text/plain");
 	  http_send_reply(client, status, rh, rb ? rb : octstr_imm(""));
-	  
+
 	  octstr_destroy(s);
 	  octstr_destroy(ip);
 	  octstr_destroy(url);
@@ -286,7 +286,7 @@ static void handle_notify(MM1Settings *mm1)
 	  octstr_destroy(otransid);
 	  octstr_destroy(body);
 	  octstr_destroy(rb);
-	  
+
 	  gwlist_destroy(to, (void *)octstr_destroy);
 	  http_destroy_headers(h);
 	  http_destroy_headers(rh);
@@ -295,24 +295,24 @@ static void handle_notify(MM1Settings *mm1)
 	  http_destroy_cgiargs(cgivar_ctypes);
 	  mms_destroy(m);
      }
-     
+
      mms_info(0, "mmsbox-mm1", NULL, "handle_notify exits");
      gwlist_remove_producer(mm1->requests); /* cause consumers to shut down. */
 }
 
 
-static Octstr *send_msg(void *data, Octstr *from, Octstr *to, 
-			 Octstr *transid, 
+static Octstr *send_msg(void *data, Octstr *from, Octstr *to,
+			 Octstr *transid,
 			 Octstr *linkedid, char *vasid, Octstr *service_code,
 			 MmsMsg *m, List *hdrs, Octstr **err, int *retry)
 {
      MM1Request *r = gw_malloc(sizeof *r);
      MM1Settings *s = data;
      Octstr *id;
-     
+
      gw_assert(data);
      gw_assert(m);
-     
+
      if (!s->sender_alive) {
 	  *err =  octstr_imm("internal error, mm1 notify not started!");
 	  *retry  = 1;
@@ -331,25 +331,25 @@ static Octstr *send_msg(void *data, Octstr *from, Octstr *to,
      r->type = MM1_PUSH;
      r->result = NULL;
      r->error = NULL;
-     
+
      pthread_mutex_lock(&r->mutex); /* at pickup, must grab mutex before signalling. otherwise race condition.*/
 
      gwlist_produce(s->requests, r);
-     
+
      pthread_cond_wait(&r->cond, &r->mutex);
-     
+
      *err = r->error;
-     
+
      id = r->result;
-     mms_info(0, "mmsbox-mm1", NULL, "sent message, type=%s, result=%s", 
+     mms_info(0, "mmsbox-mm1", NULL, "sent message, type=%s, result=%s",
 	  mms_message_type_to_cstr(mms_messagetype(m)), r->error ? octstr_get_cstr(r->error) : "(none)");
      /* destroy the structure. */
-     
+
      pthread_cond_destroy(&r->cond);
      pthread_mutex_destroy(&r->mutex);
      gw_free(r);
      *retry = 1; /*  always retry ?? */
-     
+
      return id;
 }
 
@@ -368,14 +368,14 @@ static void handle_mm1(MM1Settings *mm1)
 	       n = system(octstr_get_cstr(mm1->smsc_off));
 	       gwthread_sleep(5); /* allow it to die. */
 	  }
-	  if (mm1->gprs_on) 
+	  if (mm1->gprs_on)
 	       pid = start_gprs(mm1->gprs_on, mm1->gprs_pid);
 
 	  if (pid  < 0) {
 	       mms_warning(0, "mmsbox-mm1", NULL,"failed to start GPRS connection. waiting...");
 	       gwthread_sleep(2);
 	       goto kill_gprs;
-	  } else 
+	  } else
 	       mms_info(0, "mmsbox-mm1", NULL, "start_gprs returned PID: %ld", pid);
 
 	  do {
@@ -385,8 +385,8 @@ static void handle_mm1(MM1Settings *mm1)
 	       Octstr *ms;
 	       MmsMsg *m;
 	       int msize;
-	       
-	       if (r->waiter_exists) 
+
+	       if (r->waiter_exists)
 		    pthread_mutex_lock(&r->mutex); /* grab lock to avoid race condition */
 
 	       body = (r->type == MM1_PUSH) ? mms_tobinary(r->u.m) : NULL;
@@ -406,42 +406,42 @@ static void handle_mm1(MM1Settings *mm1)
 			 Octstr *qf = NULL, *qdir = NULL, *mmc_id = NULL;
 			 time_t expiryt = -1, deliveryt = -1;
 			 int dlr;
-			 
+
 			 /* we assume it is a true message (send_req|retrieve_conf) */
-			 mms_collect_envdata_from_msgheaders(mh, &to, &subject, 
-							     &otransid, &expiryt, &deliveryt, 
+			 mms_collect_envdata_from_msgheaders(mh, &to, &subject,
+							     &otransid, &expiryt, &deliveryt,
 							     DEFAULT_EXPIRE, -1,
-							     octstr_get_cstr(mm1->unified_prefix), 
+							     octstr_get_cstr(mm1->unified_prefix),
 							     mm1->strip_prefixes);
-			 
-			 msgid = http_header_value(mh, octstr_imm("Message-ID"));	  
-			 value = http_header_value(mh, octstr_imm("X-Mms-Delivery-Report"));	  
-			 if (value && 
-			     octstr_case_compare(value, octstr_imm("Yes")) == 0) 
+
+			 msgid = http_header_value(mh, octstr_imm("Message-ID"));
+			 value = http_header_value(mh, octstr_imm("X-Mms-Delivery-Report"));
+			 if (value &&
+			     octstr_case_compare(value, octstr_imm("Yes")) == 0)
 			      dlr = 1;
-			 else 
+			 else
 			      dlr = 0;
 			 octstr_destroy(value);
-			 
+
 			 if (deliveryt < 0)
 			      deliveryt = time(NULL);
-			 
+
 			 if (expiryt < 0)
 			      expiryt = time(NULL) + DEFAULT_EXPIRE;
-			 
+
 			 if (hfrom == NULL)
 			      hfrom = http_header_value(mh, octstr_imm("From"));
-			 
+
 			 mms_remove_headers(m, "Bcc");
 			 mms_remove_headers(m, "X-Mms-Delivery-Time");
 			 mms_remove_headers(m, "X-Mms-Expiry");
 			 mms_remove_headers(m, "X-Mms-Sender-Visibility");
-			 
+
 			 qdir = get_mmsbox_queue_dir(hfrom, to, mm1->info, &mmc_id); /* get routing info. */
-			 /* Save it,  put message id in header, return. */     
-			 qf = qfs->mms_queue_add(hfrom, to, subject, 
+			 /* Save it,  put message id in header, return. */
+			 qf = qfs->mms_queue_add(hfrom, to, subject,
 						 mm1->info->id, mmc_id,
-						 deliveryt, expiryt, m, NULL, 
+						 deliveryt, expiryt, m, NULL,
 						 NULL, NULL,
 						 NULL, NULL,
 						 NULL,
@@ -449,12 +449,12 @@ static void handle_mm1(MM1Settings *mm1)
 						 octstr_get_cstr(qdir),
 						 "MM7/MM1-IN",
 						 octstr_imm(MM_NAME));
-	  
-			 if (qf) 
+
+			 if (qf)
 			      /* Log to access log */
-			      mms_log("Received", hfrom, to, msize, 
+			      mms_log("Received", hfrom, to, msize,
 				      msgid, NULL, mm1->info->id, "MMSBox",octstr_imm("MM1"), NULL);
-			 else 
+			 else
 			      mms_error(0, "mmsbox-mm1", NULL, "failed to create queue entry for URL %s",
 				    octstr_get_cstr(url));
 
@@ -463,7 +463,7 @@ static void handle_mm1(MM1Settings *mm1)
 			      MmsMsg *mresp = mms_notifyresp_ind(octstr_get_cstr(otransid),
 								 mms_message_enc(m), "Retrieved", 1);
 			      Octstr *sm = mms_tobinary(mresp);
-			      Octstr *_x = fetch_content(mm1->mmsc_url, mm1->proxy, 
+			      Octstr *_x = fetch_content(mm1->mmsc_url, mm1->proxy,
 							 sm, &_status);
 
 			      octstr_destroy(_x);
@@ -471,7 +471,7 @@ static void handle_mm1(MM1Settings *mm1)
 			      mms_destroy(mresp);
 			 }
 			 gwlist_destroy(to, (gwlist_item_destructor_t *)octstr_destroy);
-			 octstr_destroy(hfrom);     
+			 octstr_destroy(hfrom);
 			 octstr_destroy(subject);
 			 octstr_destroy(otransid);
 			 octstr_destroy(msgid);
@@ -487,28 +487,28 @@ static void handle_mm1(MM1Settings *mm1)
 			 octstr_dump(ms, 0);
 
 			 mms_msgdump(m, 1);
-		    } else 
+		    } else
 			 mms_warning(0, "mmsbox-mm1", NULL,"No send-conf returned by operator");
 
 		    if (m == NULL ||
 			(r->result = mms_get_header_value(m, octstr_imm("Message-ID"))) == NULL) {
 			 Octstr *err = m ? mms_get_header_value(m, octstr_imm("X-Mms-Response-Text")) : NULL;
 			 Octstr *status = m ? mms_get_header_value(m, octstr_imm("X-Mms-Response-Status")) : NULL;
-			 mms_error(0, "mmsbox-mm1", NULL, "Sending failed: %s, %s!", 
-			       err ? octstr_get_cstr(err) : "(none)", 
+			 mms_error(0, "mmsbox-mm1", NULL, "Sending failed: %s, %s!",
+			       err ? octstr_get_cstr(err) : "(none)",
 			       status ? octstr_get_cstr(status) : "(none)");
 			 octstr_destroy(err);
 			 octstr_destroy(status);
 		    }
-	       } else 
+	       } else
 		    mms_error(0, "mmsbox-mm1", NULL, "unknown type: %d", r->type);
-	       
+
 	       if (r->waiter_exists) {
 		    pthread_mutex_unlock(&r->mutex);
 		    pthread_cond_signal(&r->cond);
 	       } else  /* no waiter, so we free it ourselves. */
 		    gw_free(r);
-	       
+
 	       octstr_destroy(body);
 	       octstr_destroy(ms);
 	       mms_destroy(m);
@@ -523,7 +523,7 @@ static void handle_mm1(MM1Settings *mm1)
 	       gwthread_sleep(2); /* according to Piotr Isajew, this makes life better */
 	  } while (gwlist_len(mm1->requests) > 0 &&
 		   (r = gwlist_consume(mm1->requests)) != NULL);
-	  
+
      kill_gprs:
 	  if(r != NULL) {
 	    if(r->waiter_exists) {
@@ -532,21 +532,21 @@ static void handle_mm1(MM1Settings *mm1)
 	    } else{
 	      gw_free(r);
 	    }
-	    
-	    
+
+
 	  }
 	  if (pid > 0) { /* stop GPRS, restart SMSC connection. */
 	       int xkill, status;
 	       pid_t wpid;
-	       do { 
+	       do {
 		    xkill = kill(pid, SIGTERM);
 		    mms_info(0, "mmsbox-mm1", NULL, "GPRS turned off returned: %d", xkill);
-		    if (xkill < 0 && errno == ESRCH) 
+		    if (xkill < 0 && errno == ESRCH)
 			 break;
 		    wpid = waitpid(pid, &status, 0);
-		    if (wpid == pid && WIFEXITED(status)) 
+		    if (wpid == pid && WIFEXITED(status))
 			 break;
-		    else if (wpid < 0 && errno == ECHILD) 
+		    else if (wpid < 0 && errno == ECHILD)
 			 break;
 	       } while (1);
 	       gwthread_sleep(2);
@@ -557,7 +557,7 @@ static void handle_mm1(MM1Settings *mm1)
 	       gwthread_sleep(5);
 	       mms_info(0, "mmsbox-mm1", NULL, "SMSC turned on");
 	  }
-	  
+
      }
      mm1->sender_alive--;
      mms_info(0, "mmsbox-mm1", NULL, "handle_mm1 exits");
@@ -573,7 +573,7 @@ static int close_mm1(void *data)
      gwthread_join(s->h_tid);
      gwthread_sleep(2);
      gwthread_join(s->d_tid);
-     
+
      octstr_destroy(s->mmsc_url);
      octstr_destroy(s->msisdn);
      octstr_destroy(s->proxy);
@@ -603,7 +603,7 @@ MmsBoxMmscFuncs mmsc_funcs = {
 static int write_octstr_data(void *buffer, size_t size, size_t nmemb, void *userp)
 {
      Octstr *out = userp;
-     
+
      octstr_append_data(out, buffer, size*nmemb);
      mms_info(0, "mmsbox-mm1", NULL,  "write_data called with nmemn=%ld, size=%ld", nmemb, size);
      return size*nmemb;
@@ -639,26 +639,26 @@ static Octstr *fetch_content(Octstr *url, Octstr *proxy, Octstr *body, int *hsta
 	  curl_easy_setopt(cl, CURLOPT_POSTFIELDS, octstr_get_cstr(body));
 	  curl_easy_setopt(cl, CURLOPT_POSTFIELDSIZE, octstr_len(body));
      }
-     
 
-     curl_easy_setopt(cl, CURLOPT_HTTPHEADER, h);         
-     curl_easy_setopt(cl, CURLOPT_ERRORBUFFER, errbuf);         
+
+     curl_easy_setopt(cl, CURLOPT_HTTPHEADER, h);
+     curl_easy_setopt(cl, CURLOPT_ERRORBUFFER, errbuf);
 
      *hstatus = curl_easy_perform(cl); /* post away! */
      if (*hstatus != 0)
 	  mms_error(0, "mmsbox-mm1", NULL, "failed to fetch/post content: %.256s",
 		errbuf);
-     
+
      curl_slist_free_all(h); /* free the header list */
      curl_easy_cleanup(cl);
-     
+
      return s;
 }
 
 #include <unistd.h>
 
-#define MAX_GPRS_WAIT 80
-#define GPRS_POLL  5
+#define MAX_GPRS_WAIT 240
+#define GPRS_POLL  20
 static long start_gprs(Octstr *cmd, Octstr *pid_cmd)
 {
      pid_t pid = fork();
@@ -673,11 +673,11 @@ static long start_gprs(Octstr *cmd, Octstr *pid_cmd)
 	       if ((f = popen(octstr_get_cstr(pid_cmd), "r")) != NULL) {
 		    fscanf(f, "%ld", &xpid);
 		    pclose(f);
-		    if (xpid >= 0) 
+		    if (xpid >= 0)
 			 return xpid;
 	       }
 	       cpid = waitpid(pid, &status, WNOHANG); /* also wait for the child. */
-	       mms_info(0, "mmsbox-mm1", NULL,  "waiting for connection: %d, pid=%ld cpid=%ld, ifexited=%d, exitstatus=%d", 
+	       mms_info(0, "mmsbox-mm1", NULL,  "waiting for connection: %d, pid=%ld cpid=%ld, ifexited=%d, exitstatus=%d",
 		    ct, (long)pid, cpid, WIFEXITED(status), WEXITSTATUS(status));
 	       if (cpid == pid &&
 		   WIFEXITED(status))
@@ -688,7 +688,7 @@ static long start_gprs(Octstr *cmd, Octstr *pid_cmd)
 	  zombie */
 	  pid_t rpid;
 	  int st;
-	 
+
 	  rpid = waitpid(pid, &st, 0);
 	  mms_info(0, "mmsbox-mm1", NULL, "pid %d terminated", pid);
 	  return -1;
@@ -696,7 +696,7 @@ static long start_gprs(Octstr *cmd, Octstr *pid_cmd)
 	  List *l = octstr_split_words(cmd);
 	  int i, n = gwlist_len(l);
 	  char **args = gw_malloc((n+1) * sizeof *args);
-	  
+
 	  for (i = 0; i < n; i++) {
 	       Octstr *x = gwlist_get(l, i);
 	       args[i] = octstr_get_cstr(x);
@@ -704,7 +704,7 @@ static long start_gprs(Octstr *cmd, Octstr *pid_cmd)
 	  }
 	  args[i] = NULL;
 	  printf("Not reached: %d!", execvp(args[0], args));
-     } else 
+     } else
 	  mms_error(0, "mmsbox-mm1", NULL, "failed to start process!");
      return -1;
 }
