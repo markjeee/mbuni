@@ -1,5 +1,4 @@
-ME_DIR = File.expand_path('..', __FILE__)
-KANNEL_DIR = File.expand_path(File.join(ME_DIR, '../kannel/out'))
+LOCAL_DIR = File.expand_path("~/local")
 
 module Utils
   def self.push_cd(dir, &block)
@@ -18,7 +17,7 @@ end
 task :configure do
   system(
 <<EOS
-./configure --prefix=#{File.join(ME_DIR, 'out')} --with-kannel-dir=#{KANNEL_DIR}
+./configure --prefix=#{LOCAL_DIR} --with-kannel-dir=#{LOCAL_DIR}
 EOS
          )
 end
