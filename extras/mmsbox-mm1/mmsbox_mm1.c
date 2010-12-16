@@ -78,9 +78,9 @@ static int open_mm1(MmscGrp *mmc, MmsQueueHandlerFuncs *qfs,
      MM1Settings *mm1;
 
      /* parse the settings. */
-
      x = octstr_duplicate(mmc->settings);
      l = octstr_split(x, octstr_imm(";"));
+     
      octstr_destroy(x);
      if (l)
 	  while ((y = gwlist_extract_first(l)) != NULL) {
@@ -368,7 +368,9 @@ static void handle_mm1(MM1Settings *mm1)
 	       n = system(octstr_get_cstr(mm1->smsc_off));
 	       gwthread_sleep(5); /* allow it to die. */
 	  }
-	  if (mm1->gprs_on)
+	  
+	  /* don't check for gprs connection if gprs_on is NULL */
+	  if (mm1->gprs_on) {
 	       pid = start_gprs(mm1->gprs_on, mm1->gprs_pid);
 
 	  if (pid  < 0) {
@@ -377,7 +379,8 @@ static void handle_mm1(MM1Settings *mm1)
 	       goto kill_gprs;
 	  } else
 	       mms_info(0, "mmsbox-mm1", NULL, "start_gprs returned PID: %ld", pid);
-
+	  }
+	  
 	  do {
 	       Octstr *body;
 	       Octstr *url;
@@ -515,11 +518,14 @@ static void handle_mm1(MM1Settings *mm1)
 	       r = NULL;
 	       pid_t wp;
 	       int st;
-	       wp = waitpid(pid, &st, WNOHANG);
-	       if(wp == pid && WIFEXITED(st)) {
-		 mms_info(0, "mmsbox-mm1", NULL, "GPRS pid (%d) appears to be dead - quitting loop", pid);
-		 goto after_gprs_dead;
+	       if (pid > -1) {
+	         wp = waitpid(pid, &st, WNOHANG);
+	         if(wp == pid && WIFEXITED(st)) {
+		   mms_info(0, "mmsbox-mm1", NULL, "GPRS pid (%d) appears to be dead - quitting loop", pid);
+		   goto after_gprs_dead;
+	         }
 	       }
+	       
 	       gwthread_sleep(2); /* according to Piotr Isajew, this makes life better */
 	  } while (gwlist_len(mm1->requests) > 0 &&
 		   (r = gwlist_consume(mm1->requests)) != NULL);
@@ -596,6 +602,11 @@ MmsBoxMmscFuncs mmsc_funcs = {
      send_msg
 };
 
+MmsBoxMmscFuncs mm1_mmsc_funcs = {
+     open_mm1,
+     close_mm1,
+     send_msg
+};
 
 #include <curl/curl.h>
 

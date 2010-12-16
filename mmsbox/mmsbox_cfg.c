@@ -66,6 +66,8 @@ static void free_mmsc_struct (MmscGrp *m);
 
 static void admin_handler(void *unused);
 
+extern MmsBoxMmscFuncs mm1_mmsc_funcs;
+
 int mms_load_mmsbox_settings(Octstr *fname, gwthread_func_t *mmsc_handler_func)
 {     
      mCfgGrp *grp;
@@ -598,7 +600,11 @@ MmscGrp *start_mmsc_from_conf(mCfg *cfg, mCfgGrp *x, gwthread_func_t *mmsc_handl
 	  m->type = SOAP_MMSC;
      else if (octstr_case_compare(type, octstr_imm("http")) == 0)
 	  m->type = HTTP_MMSC;
-     else if (octstr_case_compare(type, octstr_imm("custom")) == 0) {
+     else if (octstr_case_compare(type, octstr_imm("mm1")) == 0) {
+	  m->type = CUSTOM_MMSC;
+	  m->settings = _mms_cfg_getx(cfg, x, octstr_imm("custom-settings"));
+	  m->fns = &mm1_mmsc_funcs;	  
+     } else if (octstr_case_compare(type, octstr_imm("custom")) == 0) {
 	  m->type = CUSTOM_MMSC;
 	  m->settings = _mms_cfg_getx(cfg, x, octstr_imm("custom-settings"));	       
 	  /* also load the libary. */

@@ -34,7 +34,7 @@ typedef struct MmscGrp {
      } incoming;      /* user, pass, port (and whether SSL) that MMSC uses to connect to us. */
      Octstr *allowed_prefix,  *denied_prefix;
      Octstr *allowed_sender_prefix,  *denied_sender_prefix;
-     enum {UNKNOWN_MMSC = -1, CUSTOM_MMSC, SOAP_MMSC, EAIF_MMSC, HTTP_MMSC} type; /* type of connection. */
+     enum {UNKNOWN_MMSC = -1, CUSTOM_MMSC, SOAP_MMSC, EAIF_MMSC, HTTP_MMSC, MM1_MMSC} type; /* type of connection. */
      double  throughput;  /* Max send rate.  */
      long threadid;   /* handler thread. */
   
